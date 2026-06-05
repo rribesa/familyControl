@@ -1,7 +1,6 @@
-@file:Suppress("TooGenericExceptionCaught", "SwallowedException", "LongMethod")
-
 package br.com.rribesa.familycontrol.feature.auth.impl.presentation.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.rribesa.familycontrol.feature.auth.api.domain.usecase.LoginWithEmailUseCase
@@ -88,10 +87,13 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
-            try {
+            kotlin.runCatching {
                 loginWithEmailUseCase(currentEmail, currentPassword)
+            }.onSuccess {
                 _effect.emit(LoginEffect.NavigateToDashboard)
-            } catch (e: Exception) {
+            }.onFailure { e ->
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                Log.e("LoginViewModel", "Login error occurred", e)
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -99,21 +101,21 @@ class LoginViewModel @Inject constructor(
                     )
                 }
                 _effect.emit(LoginEffect.ShowError(R.string.error_generic))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
             }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 
     private fun performGoogleLogin() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
-            try {
-                // In a real app, we would get the idToken from Google Credential Manager first.
-                // For this implementation contract, we stub it with a sample token or trigger delegation.
+            kotlin.runCatching {
                 loginWithGoogleUseCase(idToken = "stub_google_id_token")
+            }.onSuccess {
                 _effect.emit(LoginEffect.NavigateToDashboard)
-            } catch (e: Exception) {
+            }.onFailure { e ->
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                Log.e("LoginViewModel", "Google login error occurred", e)
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -121,9 +123,9 @@ class LoginViewModel @Inject constructor(
                     )
                 }
                 _effect.emit(LoginEffect.ShowError(R.string.error_generic))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
             }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 }
+

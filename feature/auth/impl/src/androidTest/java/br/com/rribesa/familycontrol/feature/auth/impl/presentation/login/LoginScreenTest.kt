@@ -20,7 +20,7 @@ class LoginScreenTest {
         val state = LoginState()
         composeTestRule.setContent {
             FamilyControlTheme {
-                LoginScreen(
+                loginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},
@@ -41,7 +41,7 @@ class LoginScreenTest {
         val state = LoginState(emailErrorResId = R.string.error_invalid_email)
         composeTestRule.setContent {
             FamilyControlTheme {
-                LoginScreen(
+                loginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},
@@ -59,7 +59,7 @@ class LoginScreenTest {
         val state = LoginState(isLoading = true)
         composeTestRule.setContent {
             FamilyControlTheme {
-                LoginScreen(
+                loginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},

@@ -1,7 +1,6 @@
-@file:Suppress("TooGenericExceptionCaught", "SwallowedException", "LongMethod")
-
 package br.com.rribesa.familycontrol.feature.auth.impl.presentation.register
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.rribesa.familycontrol.feature.auth.api.domain.usecase.RegisterUserUseCase
@@ -35,63 +34,111 @@ class RegisterViewModel @Inject constructor(
 
     fun onEvent(event: RegisterEvent) {
         when (event) {
-            is RegisterEvent.OnFullNameChanged -> {
-                _state.update {
-                    it.copy(
-                        fullName = event.name,
-                        fullNameErrorResId = null,
-                        errorMessageResId = null
-                    )
-                }
-            }
-            is RegisterEvent.OnEmailChanged -> {
-                _state.update {
-                    it.copy(
-                        email = event.email,
-                        emailErrorResId = null,
-                        errorMessageResId = null
-                    )
-                }
-            }
-            is RegisterEvent.OnBirthDateChanged -> {
-                _state.update {
-                    it.copy(
-                        birthDate = event.date,
-                        birthDateErrorResId = null,
-                        errorMessageResId = null
-                    )
-                }
-            }
-            is RegisterEvent.OnPasswordChanged -> {
-                _state.update {
-                    it.copy(
-                        password = event.password,
-                        passwordErrorResId = null,
-                        errorMessageResId = null
-                    )
-                }
-            }
-            is RegisterEvent.OnConfirmPasswordChanged -> {
-                _state.update {
-                    it.copy(
-                        confirmPassword = event.password,
-                        confirmPasswordErrorResId = null,
-                        errorMessageResId = null
-                    )
-                }
-            }
-            RegisterEvent.TogglePasswordVisibility -> {
-                _state.update {
-                    it.copy(isPasswordVisible = !it.isPasswordVisible)
-                }
-            }
-            RegisterEvent.OnRegisterClicked -> {
-                performRegistration()
-            }
-            RegisterEvent.OnGoogleRegisterClicked -> {
-                performGoogleRegistration()
-            }
+            is RegisterEvent.OnFullNameChanged -> updateFullName(event.name)
+            is RegisterEvent.OnEmailChanged -> updateEmail(event.email)
+            is RegisterEvent.OnBirthDateChanged -> updateBirthDate(event.date)
+            is RegisterEvent.OnPasswordChanged -> updatePassword(event.password)
+            is RegisterEvent.OnConfirmPasswordChanged -> updateConfirmPassword(event.password)
+            RegisterEvent.TogglePasswordVisibility -> togglePasswordVisibility()
+            RegisterEvent.OnRegisterClicked -> performRegistration()
+            RegisterEvent.OnGoogleRegisterClicked -> performGoogleRegistration()
         }
+    }
+
+    private fun updateFullName(name: String) {
+        _state.update {
+            it.copy(
+                fullName = name,
+                fullNameErrorResId = null,
+                errorMessageResId = null
+            )
+        }
+    }
+
+    private fun updateEmail(email: String) {
+        _state.update {
+            it.copy(
+                email = email,
+                emailErrorResId = null,
+                errorMessageResId = null
+            )
+        }
+    }
+
+    private fun updateBirthDate(date: String) {
+        _state.update {
+            it.copy(
+                birthDate = date,
+                birthDateErrorResId = null,
+                errorMessageResId = null
+            )
+        }
+    }
+
+    private fun updatePassword(password: String) {
+        _state.update {
+            it.copy(
+                password = password,
+                passwordErrorResId = null,
+                errorMessageResId = null
+            )
+        }
+    }
+
+    private fun updateConfirmPassword(password: String) {
+        _state.update {
+            it.copy(
+                confirmPassword = password,
+                confirmPasswordErrorResId = null,
+                errorMessageResId = null
+            )
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        _state.update {
+            it.copy(isPasswordVisible = !it.isPasswordVisible)
+        }
+    }
+
+    private fun validateForm(
+        name: String,
+        email: String,
+        date: String,
+        password: String,
+        confirm: String
+    ): Boolean {
+        var isValid = true
+
+        if (name.isEmpty()) {
+            _state.update { it.copy(fullNameErrorResId = R.string.error_empty_field) }
+            isValid = false
+        }
+
+        if (email.isEmpty()) {
+            _state.update { it.copy(emailErrorResId = R.string.error_empty_field) }
+            isValid = false
+        } else if (!emailRegex.matches(email)) {
+            _state.update { it.copy(emailErrorResId = R.string.error_invalid_email) }
+            isValid = false
+        }
+
+        if (date.isEmpty()) {
+            _state.update { it.copy(birthDateErrorResId = R.string.error_empty_field) }
+            isValid = false
+        }
+
+        if (!PasswordValidator.isValid(password)) {
+            _state.update { it.copy(passwordErrorResId = R.string.error_invalid_password) }
+            isValid = false
+        }
+
+        if (confirm != password) {
+            _state.update { it.copy(confirmPasswordErrorResId = R.string.error_password_mismatch) }
+            isValid = false
+        }
+
+        return isValid
     }
 
     private fun performRegistration() {
@@ -101,51 +148,29 @@ class RegisterViewModel @Inject constructor(
         val currentPassword = _state.value.password
         val currentConfirmPassword = _state.value.confirmPassword
 
-        var hasError = false
+        val isValid = validateForm(
+            name = currentName,
+            email = currentEmail,
+            date = currentDate,
+            password = currentPassword,
+            confirm = currentConfirmPassword
+        )
 
-        if (currentName.isEmpty()) {
-            _state.update { it.copy(fullNameErrorResId = R.string.error_empty_field) }
-            hasError = true
-        }
-
-        if (currentEmail.isEmpty()) {
-            _state.update { it.copy(emailErrorResId = R.string.error_empty_field) }
-            hasError = true
-        } else if (!emailRegex.matches(currentEmail)) {
-            _state.update { it.copy(emailErrorResId = R.string.error_invalid_email) }
-            hasError = true
-        }
-
-        if (currentDate.isEmpty()) {
-            _state.update { it.copy(birthDateErrorResId = R.string.error_empty_field) }
-            hasError = true
-        }
-
-        if (!PasswordValidator.isValid(currentPassword)) {
-            _state.update { it.copy(passwordErrorResId = R.string.error_invalid_password) }
-            hasError = true
-        }
-
-        if (currentConfirmPassword != currentPassword) {
-            _state.update { it.copy(confirmPasswordErrorResId = R.string.error_password_mismatch) }
-            hasError = true
-        }
-
-        if (hasError) return
+        if (!isValid) return
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
-            try {
-                // Ignore birthdate in firebase registration contract for now,
-                // since User domain entity holds it but standard register parses
-                // email, name, password.
+            kotlin.runCatching {
                 registerUserUseCase(
                     email = currentEmail,
                     name = currentName,
                     password = currentPassword
                 )
+            }.onSuccess {
                 _effect.emit(RegisterEffect.NavigateToDashboard)
-            } catch (e: Exception) {
+            }.onFailure { e ->
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                Log.e("RegisterViewModel", "Registration error occurred", e)
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -153,19 +178,21 @@ class RegisterViewModel @Inject constructor(
                     )
                 }
                 _effect.emit(RegisterEffect.ShowError(R.string.error_generic))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
             }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 
     private fun performGoogleRegistration() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
-            try {
+            kotlin.runCatching {
                 loginWithGoogleUseCase(idToken = "stub_google_id_token")
+            }.onSuccess {
                 _effect.emit(RegisterEffect.NavigateToDashboard)
-            } catch (e: Exception) {
+            }.onFailure { e ->
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                Log.e("RegisterViewModel", "Google registration error occurred", e)
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -173,9 +200,8 @@ class RegisterViewModel @Inject constructor(
                     )
                 }
                 _effect.emit(RegisterEffect.ShowError(R.string.error_generic))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
             }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 }

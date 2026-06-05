@@ -1,8 +1,4 @@
-@file:Suppress("FunctionNaming")
-
 package br.com.rribesa.familycontrol.core.ui.theme
-
-
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
@@ -36,10 +32,9 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun FamilyControlTheme(
+fun familyControlTheme(
     content: @Composable () -> Unit
 ) {
-    // Stitch design uses light theme by default
     MaterialTheme(
         colorScheme = LightColorScheme,
         content = content
