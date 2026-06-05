@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "skills": {
+    "firebase-ai-logic-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-ai-logic-basics/SKILL.md",
+      "computedHash": "65aaefb79a4d018bb24b1904be4b9a460b189b78f26145741af83ad7c38f7669"
+    },
+    "firebase-app-hosting-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-app-hosting-basics/SKILL.md",
+      "computedHash": "a3ba088442abf5b97281bcf3e4dd11e1f7bdefdc5bd404b4fb30f344d19742d2"
+    },
+    "firebase-auth-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-auth-basics/SKILL.md",
+      "computedHash": "87ffefcaa1934070f3f91977588ec82fde38a75cbc41919df6fe0a0c83acc90d"
+    },
+    "firebase-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-basics/SKILL.md",
+      "computedHash": "610305ba0d7fcb956001a2a96eea7902b63ae7367214aeee7ab0d93e0b6e8369"
+    },
+    "firebase-crashlytics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-crashlytics/SKILL.md",
+      "computedHash": "e40f0b599853b0512d023306b23bfbcc39c911ff61d5f0f084cab2bce234480a"
+    },
+    "firebase-data-connect": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-data-connect-basics/SKILL.md",
+      "computedHash": "506bd68146e316f296df2dd02d90aa90542584b6b131f4003447d7716155dcdd"
+    },
+    "firebase-firestore": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-firestore/SKILL.md",
+      "computedHash": "b2257a15aabfe310176f4e94ffec377b32bdc2e8465d65d219542c4c4c896a39"
+    },
+    "firebase-hosting-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-hosting-basics/SKILL.md",
+      "computedHash": "0688a8ad6cb72149924352cc47e6cc8bf815e944b636a67b9da225cc9b025afc"
+    },
+    "firebase-remote-config-basics": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-remote-config-basics/SKILL.md",
+      "computedHash": "ac2bfdc0f4e2fba123e2baf22a39ff80073c9f682784a67d0ac625118bad1921"
+    },
+    "firebase-security-rules-auditor": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/firebase-security-rules-auditor/SKILL.md",
+      "computedHash": "42e793406ca8980c47fcdbd309f02838316849bcbf8475001b4ecaa6a67606b8"
+    },
+    "xcode-project-setup": {
+      "source": "firebase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/xcode-project-setup/SKILL.md",
+      "computedHash": "c212c4e08f0d2bbd4a2a61278a9a030e3da1227c0fe57022ed54d1c3c1a0aaf8"
+    },
+    "adaptive": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/adaptive/SKILL.md",
+      "computedHash": "92a27203ecf29170ad69bd627a953ad4f72aa4fea5ecc0ee70a5e444787df38b"
+    },
+    "agp-9-upgrade": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/agp-9-upgrade/SKILL.md",
+      "computedHash": "a6583181450cdcfa0d0b714ecffb06f7c49b12ea548b09988b9645cdca703078"
+    },
+    "android-cli": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/android-cli/SKILL.md",
+      "computedHash": "c5e711857f09650ceb2c0705f449fc4a53ef4c68bf8c7cc25333bcbcd73b090f"
+    },
+    "appfunctions": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/appfunctions/SKILL.md",
+      "computedHash": "25f718519bab0fcd5fc60517bec374db4032d25c3a27b380acde667cccc54507"
+    },
+    "camera1-to-camerax": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/camera1-to-camerax/SKILL.md",
+      "computedHash": "e894ad6f744a90b57cd498001282df2f98aef604c72154592d5b794203d8a3af"
+    },
+    "display-glasses-with-jetpack-compose-glimmer": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/display-glasses-with-jetpack-compose-glimmer/SKILL.md",
+      "computedHash": "5ca35d8cce2446159632e4af2411dd9e87b1823b101c65388bfdb1592b4b0ee9"
+    },
+    "edge-to-edge": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/edge-to-edge/SKILL.md",
+      "computedHash": "d071a6d8a97c99235f8cb05795c2dc83f0420be2221cecf0de3ef2495cf67324"
+    },
+    "engage-sdk-integration": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/engage-sdk-integration/SKILL.md",
+      "computedHash": "9e26d1be1c486458ea0b86761e6f529beda14a446e52df14f787d1ba0acb2850"
+    },
+    "jetpack-compose-m3": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/jetpack-compose-m3/SKILL.md",
+      "computedHash": "16eeaf9aa1c2db79124f9c1818564c8efd66e4231ec4b56676d6e505525b43bb"
+    },
+    "migrate-xml-views-to-jetpack-compose": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/migrate-xml-views-to-jetpack-compose/SKILL.md",
+      "computedHash": "79c0bce78ec7d80f3bf4305919af0bd89b226cec203d4a5a083cf6838394f692"
+    },
+    "navigation-3": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/navigation-3/SKILL.md",
+      "computedHash": "cef7f754fdaa62cde40ae255de55eb4a116780b63ce5aedd8efe89e3d656d78a"
+    },
+    "perfetto-sql": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/perfetto-sql/SKILL.md",
+      "computedHash": "13e701190c529212ada3c6252c18a3cac8f33b1027b72db8c0bdd2f7726eb5ca"
+    },
+    "perfetto-trace-analysis": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/perfetto-trace-analysis/SKILL.md",
+      "computedHash": "cb1b5b16a4c74b7e18bed1b07217867c9e3c0155b4d3ce4dfb5800737f75f3db"
+    },
+    "play-billing-library-version-upgrade": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/play-billing-library-version-upgrade/SKILL.md",
+      "computedHash": "eaf39e8cc9c22123bd0d5a6911a141716149f81e1291250f3c46dba3e83d6c00"
+    },
+    "r8-analyzer": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/r8-analyzer/SKILL.md",
+      "computedHash": "fa7a7b8b6352a4c6ac30535b1fc092913613e5cbb07b32eb43d90f4c78e04578"
+    },
+    "styles": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/styles/SKILL.md",
+      "computedHash": "255af376f51a2c213a1107c87c20697994a3407353cc1a1dc85c9d7a1a97b4cb"
+    },
+    "testing-setup": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/testing-setup/SKILL.md",
+      "computedHash": "88428c98f6c0ac9f004712f0295715cf8b7fabb051a604e8a62102c589eec10d"
+    },
+    "verified-email": {
+      "source": "android-cli",
+      "sourceType": "local",
+      "skillPath": "skills/verified-email/SKILL.md",
+      "computedHash": "d060c1b5de4b36c56cfe611c55249e5bcb34507c80e822c8233c98edab2f8f88"
+    }
+  }
+}
