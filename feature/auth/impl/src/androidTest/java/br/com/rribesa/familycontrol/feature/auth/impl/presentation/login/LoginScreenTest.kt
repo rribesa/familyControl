@@ -20,7 +20,7 @@ class LoginScreenTest {
         val state = LoginState()
         composeTestRule.setContent {
             FamilyControlTheme {
-                loginScreen(
+                LoginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},
@@ -41,7 +41,7 @@ class LoginScreenTest {
         val state = LoginState(emailErrorResId = R.string.error_invalid_email)
         composeTestRule.setContent {
             FamilyControlTheme {
-                loginScreen(
+                LoginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},
@@ -50,7 +50,6 @@ class LoginScreenTest {
             }
         }
 
-        // We check for the error text from resources
         composeTestRule.onNodeWithText("E-mail inválido").assertIsDisplayed()
     }
 
@@ -59,7 +58,7 @@ class LoginScreenTest {
         val state = LoginState(isLoading = true)
         composeTestRule.setContent {
             FamilyControlTheme {
-                loginScreen(
+                LoginScreen(
                     state = state,
                     onEvent = {},
                     onForgotPasswordClicked = {},
@@ -68,8 +67,6 @@ class LoginScreenTest {
             }
         }
 
-        // When loading is true, Enter text is hidden and progress indicator is shown.
-        // So we assert that the Enter text is not displayed or loading happens.
         composeTestRule.onNodeWithText("Entrar").assertDoesNotExist()
     }
 }

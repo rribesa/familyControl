@@ -46,7 +46,7 @@ import br.com.rribesa.familycontrol.core.ui.R
 private const val FORM_DISCLAIMER_WIDTH_FRACTION = 0.9f
 
 @Composable
-fun nameField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun NameField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.register_name_label),
@@ -85,7 +85,7 @@ fun nameField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
 }
 
 @Composable
-fun emailField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun EmailField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.login_email_label),
@@ -127,7 +127,7 @@ fun emailField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
 }
 
 @Composable
-fun birthDateField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun BirthDateField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.register_birthdate_label),
@@ -166,7 +166,7 @@ fun birthDateField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
 }
 
 @Composable
-fun passwordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun PasswordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.register_password_label),
@@ -184,7 +184,7 @@ fun passwordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
                     tint = MaterialTheme.colorScheme.outline
                 )
             },
-            trailingIcon = { passwordTrailingIcon(state.isPasswordVisible, onEvent) },
+            trailingIcon = { PasswordTrailingIcon(state.isPasswordVisible, onEvent) },
             visualTransformation = if (state.isPasswordVisible) {
                 VisualTransformation.None
             } else {
@@ -212,7 +212,7 @@ fun passwordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
 }
 
 @Composable
-private fun passwordTrailingIcon(isVisible: Boolean, onEvent: (RegisterEvent) -> Unit) {
+private fun PasswordTrailingIcon(isVisible: Boolean, onEvent: (RegisterEvent) -> Unit) {
     IconButton(
         onClick = { onEvent(RegisterEvent.TogglePasswordVisibility) }
     ) {
@@ -229,7 +229,7 @@ private fun passwordTrailingIcon(isVisible: Boolean, onEvent: (RegisterEvent) ->
 }
 
 @Composable
-fun confirmPasswordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun ConfirmPasswordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.register_confirm_password_label),
@@ -280,7 +280,7 @@ fun confirmPasswordField(state: RegisterState, onEvent: (RegisterEvent) -> Unit)
 }
 
 @Composable
-fun registerErrorBanner(state: RegisterState) {
+fun RegisterErrorBanner(state: RegisterState) {
     AnimatedVisibility(visible = state.errorMessageResId != null) {
         Text(
             text = state.errorMessageResId?.let { stringResource(id = it) }.orEmpty(),
@@ -293,7 +293,7 @@ fun registerErrorBanner(state: RegisterState) {
 }
 
 @Composable
-fun registerSubmitButton(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+fun RegisterSubmitButton(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Button(
         onClick = { onEvent(RegisterEvent.OnRegisterClicked) },
         enabled = !state.isLoading,
@@ -321,7 +321,7 @@ fun registerSubmitButton(state: RegisterState, onEvent: (RegisterEvent) -> Unit)
 }
 
 @Composable
-fun alreadyHaveAccountLink(onLoginClicked: () -> Unit) {
+fun AlreadyHaveAccountLink(onLoginClicked: () -> Unit) {
     Text(
         text = stringResource(id = R.string.register_already_has_account),
         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
@@ -335,7 +335,7 @@ fun alreadyHaveAccountLink(onLoginClicked: () -> Unit) {
 }
 
 @Composable
-fun registerDisclaimer() {
+fun RegisterDisclaimer() {
     Text(
         text = stringResource(id = R.string.register_terms_prefix) +
                 stringResource(id = R.string.register_terms_link) +

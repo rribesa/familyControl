@@ -14,14 +14,11 @@ class ForgotPasswordTest {
 
     @Test
     fun invoke_delegatesToRepository() = runTest {
-        // Given
         val email = "forgot@test.com"
         coEvery { authRepository.sendPasswordResetEmail(email) } returns Unit
 
-        // When
         useCase(email)
 
-        // Then
         coVerify(exactly = 1) { authRepository.sendPasswordResetEmail(email) }
     }
 }

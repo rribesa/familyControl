@@ -54,12 +54,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.rribesa.familycontrol.core.ui.R
-import br.com.rribesa.familycontrol.core.ui.theme.familyControlTheme
+import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
 
 private const val SUBTITLE_MAX_WIDTH_FRACTION = 0.85f
 
 @Composable
-fun loginScreen(
+fun LoginScreen(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit,
     onForgotPasswordClicked: () -> Unit,
@@ -71,7 +71,7 @@ fun loginScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        loginBackground()
+        LoginBackground()
 
         Column(
             modifier = Modifier
@@ -82,22 +82,22 @@ fun loginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(48.dp))
-            loginHeader()
+            LoginHeader()
             Spacer(modifier = Modifier.height(32.dp))
-            loginFormCard(
+            LoginFormCard(
                 state = state,
                 onEvent = onEvent,
                 onForgotPasswordClicked = onForgotPasswordClicked
             )
             Spacer(modifier = Modifier.height(24.dp))
-            loginFooter(onRegisterClicked = onRegisterClicked)
+            LoginFooter(onRegisterClicked = onRegisterClicked)
             Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
 
 @Composable
-private fun BoxScope.loginBackground() {
+private fun BoxScope.LoginBackground() {
     Box(
         modifier = Modifier
             .align(Alignment.TopEnd)
@@ -117,7 +117,7 @@ private fun BoxScope.loginBackground() {
 }
 
 @Composable
-private fun loginHeader() {
+private fun LoginHeader() {
     Box(
         modifier = Modifier
             .size(80.dp)
@@ -154,7 +154,7 @@ private fun loginHeader() {
 }
 
 @Composable
-private fun loginFormCard(
+private fun LoginFormCard(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit,
     onForgotPasswordClicked: () -> Unit
@@ -177,23 +177,23 @@ private fun loginFormCard(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            emailField(state = state, onEvent = onEvent)
-            passwordField(
+            EmailField(state = state, onEvent = onEvent)
+            PasswordField(
                 state = state,
                 onEvent = onEvent,
                 onForgotPasswordClicked = onForgotPasswordClicked
             )
-            errorBanner(state = state)
-            submitButton(state = state, onEvent = onEvent)
-            orDivider()
-            googleButton(state = state, onEvent = onEvent)
+            ErrorBanner(state = state)
+            SubmitButton(state = state, onEvent = onEvent)
+            OrDivider()
+            GoogleButton(state = state, onEvent = onEvent)
         }
     }
 }
 
 
 @Composable
-private fun loginFooter(onRegisterClicked: () -> Unit) {
+private fun LoginFooter(onRegisterClicked: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -216,9 +216,9 @@ private fun loginFooter(onRegisterClicked: () -> Unit) {
 
 @Preview(name = "Normal Device (Phone)", showBackground = true, device = Devices.PHONE)
 @Composable
-internal fun loginPreviewNormal() {
-    familyControlTheme {
-        loginScreen(
+internal fun LoginPreviewNormal() {
+    FamilyControlTheme {
+        LoginScreen(
             state = LoginState(),
             onEvent = {},
             onForgotPasswordClicked = {},
@@ -229,9 +229,9 @@ internal fun loginPreviewNormal() {
 
 @Preview(name = "Large Device (Tablet)", showBackground = true, device = Devices.TABLET)
 @Composable
-internal fun loginPreviewLarge() {
-    familyControlTheme {
-        loginScreen(
+internal fun LoginPreviewLarge() {
+    FamilyControlTheme {
+        LoginScreen(
             state = LoginState(),
             onEvent = {},
             onForgotPasswordClicked = {},
@@ -242,9 +242,9 @@ internal fun loginPreviewLarge() {
 
 @Preview(name = "Expanded Device (Landscape)", showBackground = true, widthDp = 1024, heightDp = 600)
 @Composable
-internal fun loginPreviewExpanded() {
-    familyControlTheme {
-        loginScreen(
+internal fun LoginPreviewExpanded() {
+    FamilyControlTheme {
+        LoginScreen(
             state = LoginState(),
             onEvent = {},
             onForgotPasswordClicked = {},

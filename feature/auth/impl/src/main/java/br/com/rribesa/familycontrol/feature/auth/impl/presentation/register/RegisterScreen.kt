@@ -52,7 +52,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.rribesa.familycontrol.core.ui.R
-import br.com.rribesa.familycontrol.core.ui.theme.familyControlTheme
+import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
 
 private const val SUBTITLE_MAX_WIDTH_FRACTION = 0.9f
 private const val GOOGLE_BUTTON_WIDTH_FRACTION = 0.95f
@@ -60,7 +60,7 @@ private const val DIVIDER_WIDTH_FRACTION = 0.95f
 private const val FORM_WIDTH_FRACTION = 0.95f
 
 @Composable
-fun registerScreen(
+fun RegisterScreen(
     state: RegisterState,
     onEvent: (RegisterEvent) -> Unit,
     onLoginClicked: () -> Unit,
@@ -71,7 +71,7 @@ fun registerScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        registerBackground()
+        RegisterBackground()
 
         Column(
             modifier = Modifier
@@ -81,21 +81,21 @@ fun registerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(40.dp))
-            registerHeader()
+            RegisterHeader()
             Spacer(modifier = Modifier.height(24.dp))
-            registerGoogleButton(state = state, onEvent = onEvent)
+            RegisterGoogleButton(state = state, onEvent = onEvent)
             Spacer(modifier = Modifier.height(16.dp))
-            registerDivider()
+            RegisterDivider()
             Spacer(modifier = Modifier.height(16.dp))
-            registerForm(state = state, onEvent = onEvent, onLoginClicked = onLoginClicked)
+            RegisterForm(state = state, onEvent = onEvent, onLoginClicked = onLoginClicked)
             Spacer(modifier = Modifier.height(24.dp))
-            registerDisclaimer()
+            RegisterDisclaimer()
         }
     }
 }
 
 @Composable
-private fun BoxScope.registerBackground() {
+private fun BoxScope.RegisterBackground() {
     Box(
         modifier = Modifier
             .align(Alignment.TopEnd)
@@ -115,7 +115,7 @@ private fun BoxScope.registerBackground() {
 }
 
 @Composable
-private fun registerHeader() {
+private fun RegisterHeader() {
     Text(
         text = stringResource(id = R.string.register_title),
         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -135,7 +135,7 @@ private fun registerHeader() {
 }
 
 @Composable
-private fun registerGoogleButton(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
+private fun RegisterGoogleButton(state: RegisterState, onEvent: (RegisterEvent) -> Unit) {
     Button(
         onClick = { onEvent(RegisterEvent.OnGoogleRegisterClicked) },
         enabled = !state.isLoading,
@@ -161,7 +161,7 @@ private fun registerGoogleButton(state: RegisterState, onEvent: (RegisterEvent) 
 }
 
 @Composable
-private fun registerDivider() {
+private fun RegisterDivider() {
     Row(
         modifier = Modifier.fillMaxWidth(DIVIDER_WIDTH_FRACTION),
         verticalAlignment = Alignment.CenterVertically
@@ -188,7 +188,7 @@ private fun registerDivider() {
 }
 
 @Composable
-private fun registerForm(
+private fun RegisterForm(
     state: RegisterState,
     onEvent: (RegisterEvent) -> Unit,
     onLoginClicked: () -> Unit
@@ -197,24 +197,24 @@ private fun registerForm(
         modifier = Modifier.fillMaxWidth(FORM_WIDTH_FRACTION),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        nameField(state = state, onEvent = onEvent)
-        emailField(state = state, onEvent = onEvent)
-        birthDateField(state = state, onEvent = onEvent)
-        passwordField(state = state, onEvent = onEvent)
-        confirmPasswordField(state = state, onEvent = onEvent)
-        registerErrorBanner(state = state)
+        NameField(state = state, onEvent = onEvent)
+        EmailField(state = state, onEvent = onEvent)
+        BirthDateField(state = state, onEvent = onEvent)
+        PasswordField(state = state, onEvent = onEvent)
+        ConfirmPasswordField(state = state, onEvent = onEvent)
+        RegisterErrorBanner(state = state)
         Spacer(modifier = Modifier.height(8.dp))
-        registerSubmitButton(state = state, onEvent = onEvent)
-        alreadyHaveAccountLink(onLoginClicked = onLoginClicked)
+        RegisterSubmitButton(state = state, onEvent = onEvent)
+        AlreadyHaveAccountLink(onLoginClicked = onLoginClicked)
     }
 }
 
 
 @Preview(name = "Normal Device (Phone)", showBackground = true, device = Devices.PHONE)
 @Composable
-internal fun registerPreviewNormal() {
-    familyControlTheme {
-        registerScreen(
+internal fun RegisterPreviewNormal() {
+    FamilyControlTheme {
+        RegisterScreen(
             state = RegisterState(),
             onEvent = {},
             onLoginClicked = {}
@@ -224,9 +224,9 @@ internal fun registerPreviewNormal() {
 
 @Preview(name = "Large Device (Tablet)", showBackground = true, device = Devices.TABLET)
 @Composable
-internal fun registerPreviewLarge() {
-    familyControlTheme {
-        registerScreen(
+internal fun RegisterPreviewLarge() {
+    FamilyControlTheme {
+        RegisterScreen(
             state = RegisterState(),
             onEvent = {},
             onLoginClicked = {}
@@ -236,9 +236,9 @@ internal fun registerPreviewLarge() {
 
 @Preview(name = "Expanded Device (Landscape)", showBackground = true, widthDp = 1024, heightDp = 600)
 @Composable
-internal fun registerPreviewExpanded() {
-    familyControlTheme {
-        registerScreen(
+internal fun RegisterPreviewExpanded() {
+    FamilyControlTheme {
+        RegisterScreen(
             state = RegisterState(),
             onEvent = {},
             onLoginClicked = {}

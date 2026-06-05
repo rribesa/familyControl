@@ -17,17 +17,14 @@ class RegisterUserTest {
 
     @Test
     fun invoke_delegatesToRepository() = runTest {
-        // Given
         val email = "new@test.com"
         val name = "New User"
         val password = "Strong1#"
         val expectedUser = User("2", email, name, Date(0))
         coEvery { authRepository.register(email, name, password) } returns expectedUser
 
-        // When
         val result = useCase(email, name, password)
 
-        // Then
         assertEquals(expectedUser, result)
         coVerify(exactly = 1) { authRepository.register(email, name, password) }
     }

@@ -17,13 +17,13 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import br.com.rribesa.familycontrol.core.navigation.Destination
 import br.com.rribesa.familycontrol.core.navigation.Navigator
-import br.com.rribesa.familycontrol.core.ui.screen.splashScreen
-import br.com.rribesa.familycontrol.core.ui.theme.familyControlTheme
+import br.com.rribesa.familycontrol.core.ui.screen.SplashScreen
+import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.login.LoginEffect
-import br.com.rribesa.familycontrol.feature.auth.impl.presentation.login.loginScreen
+import br.com.rribesa.familycontrol.feature.auth.impl.presentation.login.LoginScreen
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.login.LoginViewModel
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterEffect
-import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.registerScreen
+import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterScreen
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -37,22 +37,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            familyControlTheme {
-                appNavDisplay(navigator)
+            FamilyControlTheme {
+                AppNavDisplay(navigator)
             }
         }
     }
 }
 
 @Composable
-private fun appNavDisplay(navigator: Navigator) {
+private fun AppNavDisplay(navigator: Navigator) {
     NavDisplay(
         backStack = navigator.backStack,
         onBack = { navigator.goBack() },
         entryProvider = { destination ->
             when (destination) {
                 Destination.Splash -> NavEntry(destination) {
-                    splashScreen(
+                    SplashScreen(
                         modifier = Modifier.fillMaxSize(),
                         onSplashFinished = {
                             navigator.navigateTo(Destination.Login)
@@ -60,10 +60,10 @@ private fun appNavDisplay(navigator: Navigator) {
                     )
                 }
                 Destination.Login -> NavEntry(destination) {
-                    loginRouteContent(navigator)
+                    LoginRouteContent(navigator)
                 }
                 Destination.Register -> NavEntry(destination) {
-                    registerRouteContent(navigator)
+                    RegisterRouteContent(navigator)
                 }
                 Destination.Dashboard -> NavEntry(destination) {
                     Box(
@@ -79,7 +79,7 @@ private fun appNavDisplay(navigator: Navigator) {
 }
 
 @Composable
-private fun loginRouteContent(navigator: Navigator) {
+private fun LoginRouteContent(navigator: Navigator) {
     val viewModel: LoginViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -93,20 +93,17 @@ private fun loginRouteContent(navigator: Navigator) {
                     navigator.navigateTo(Destination.Register)
                 }
                 LoginEffect.NavigateToForgotPassword -> {
-                    // Navigate to forgot password screen stub
                 }
                 is LoginEffect.ShowError -> {
-                    // Display error toast/alert
                 }
             }
         }
     }
 
-    loginScreen(
+    LoginScreen(
         state = state,
         onEvent = viewModel::onEvent,
         onForgotPasswordClicked = {
-            // Trigger forgot password flow stub
         },
         onRegisterClicked = {
             navigator.navigateTo(Destination.Register)
@@ -116,7 +113,7 @@ private fun loginRouteContent(navigator: Navigator) {
 }
 
 @Composable
-private fun registerRouteContent(navigator: Navigator) {
+private fun RegisterRouteContent(navigator: Navigator) {
     val viewModel: RegisterViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -130,13 +127,12 @@ private fun registerRouteContent(navigator: Navigator) {
                     navigator.navigateTo(Destination.Login)
                 }
                 is RegisterEffect.ShowError -> {
-                    // Handle registration error feedback
                 }
             }
         }
     }
 
-    registerScreen(
+    RegisterScreen(
         state = state,
         onEvent = viewModel::onEvent,
         onLoginClicked = {

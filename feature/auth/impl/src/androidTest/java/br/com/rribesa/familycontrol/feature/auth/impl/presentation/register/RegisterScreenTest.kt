@@ -18,7 +18,7 @@ class RegisterScreenTest {
         val state = RegisterState()
         composeTestRule.setContent {
             FamilyControlTheme {
-                registerScreen(
+                RegisterScreen(
                     state = state,
                     onEvent = {},
                     onLoginClicked = {}
@@ -39,7 +39,7 @@ class RegisterScreenTest {
         val state = RegisterState(passwordErrorResId = R.string.error_invalid_password)
         composeTestRule.setContent {
             FamilyControlTheme {
-                registerScreen(
+                RegisterScreen(
                     state = state,
                     onEvent = {},
                     onLoginClicked = {}
@@ -55,7 +55,7 @@ class RegisterScreenTest {
         val state = RegisterState(confirmPasswordErrorResId = R.string.error_password_mismatch)
         composeTestRule.setContent {
             FamilyControlTheme {
-                registerScreen(
+                RegisterScreen(
                     state = state,
                     onEvent = {},
                     onLoginClicked = {}

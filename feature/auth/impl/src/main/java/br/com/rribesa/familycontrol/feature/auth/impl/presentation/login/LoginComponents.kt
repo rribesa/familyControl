@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import br.com.rribesa.familycontrol.core.ui.R
 
 @Composable
-fun emailField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
+fun EmailField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = stringResource(id = R.string.login_email_label),
@@ -80,13 +80,13 @@ fun emailField(state: LoginState, onEvent: (LoginEvent) -> Unit) {
 }
 
 @Composable
-fun passwordField(
+fun PasswordField(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit,
     onForgotPasswordClicked: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        passwordHeader(onForgotPasswordClicked)
+        PasswordHeader(onForgotPasswordClicked)
         OutlinedTextField(
             value = state.password,
             onValueChange = { onEvent(LoginEvent.OnPasswordChanged(it)) },
@@ -98,7 +98,7 @@ fun passwordField(
                     tint = MaterialTheme.colorScheme.outline
                 )
             },
-            trailingIcon = { passwordTrailingIcon(state.isPasswordVisible, onEvent) },
+            trailingIcon = { PasswordTrailingIcon(state.isPasswordVisible, onEvent) },
             visualTransformation = if (state.isPasswordVisible) {
                 VisualTransformation.None
             } else {
@@ -117,7 +117,7 @@ fun passwordField(
 }
 
 @Composable
-private fun passwordHeader(onForgotPasswordClicked: () -> Unit) {
+private fun PasswordHeader(onForgotPasswordClicked: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -138,7 +138,7 @@ private fun passwordHeader(onForgotPasswordClicked: () -> Unit) {
 }
 
 @Composable
-private fun passwordTrailingIcon(isVisible: Boolean, onEvent: (LoginEvent) -> Unit) {
+private fun PasswordTrailingIcon(isVisible: Boolean, onEvent: (LoginEvent) -> Unit) {
     IconButton(
         onClick = { onEvent(LoginEvent.TogglePasswordVisibility) }
     ) {
@@ -155,7 +155,7 @@ private fun passwordTrailingIcon(isVisible: Boolean, onEvent: (LoginEvent) -> Un
 }
 
 @Composable
-fun errorBanner(state: LoginState) {
+fun ErrorBanner(state: LoginState) {
     AnimatedVisibility(visible = state.errorMessageResId != null) {
         Text(
             text = state.errorMessageResId?.let { stringResource(id = it) }.orEmpty(),
@@ -168,7 +168,7 @@ fun errorBanner(state: LoginState) {
 }
 
 @Composable
-fun submitButton(state: LoginState, onEvent: (LoginEvent) -> Unit) {
+fun SubmitButton(state: LoginState, onEvent: (LoginEvent) -> Unit) {
     Button(
         onClick = { onEvent(LoginEvent.OnLoginClicked) },
         enabled = !state.isLoading,
@@ -196,7 +196,7 @@ fun submitButton(state: LoginState, onEvent: (LoginEvent) -> Unit) {
 }
 
 @Composable
-fun orDivider() {
+fun OrDivider() {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -223,7 +223,7 @@ fun orDivider() {
 }
 
 @Composable
-fun googleButton(state: LoginState, onEvent: (LoginEvent) -> Unit) {
+fun GoogleButton(state: LoginState, onEvent: (LoginEvent) -> Unit) {
     Button(
         onClick = { onEvent(LoginEvent.OnGoogleLoginClicked) },
         enabled = !state.isLoading,

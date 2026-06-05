@@ -17,15 +17,12 @@ class LoginWithGoogleTest {
 
     @Test
     fun invoke_delegatesToRepository() = runTest {
-        // Given
         val idToken = "google_token_123"
         val expectedUser = User("1", "google@test.com", "Google User", Date(0))
         coEvery { authRepository.loginWithGoogle(idToken) } returns expectedUser
 
-        // When
         val result = useCase(idToken)
 
-        // Then
         assertEquals(expectedUser, result)
         coVerify(exactly = 1) { authRepository.loginWithGoogle(idToken) }
     }

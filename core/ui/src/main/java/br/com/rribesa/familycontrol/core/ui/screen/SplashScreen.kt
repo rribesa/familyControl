@@ -49,7 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.rribesa.familycontrol.core.ui.R
-import br.com.rribesa.familycontrol.core.ui.theme.familyControlTheme
+import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -83,7 +83,7 @@ private class SplashAnimations(
 )
 
 @Composable
-fun splashScreen(
+fun SplashScreen(
     modifier: Modifier = Modifier,
     onSplashFinished: () -> Unit = {}
 ) {
@@ -132,7 +132,7 @@ fun splashScreen(
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        splashBackground()
+        SplashBackground()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -140,11 +140,11 @@ fun splashScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            splashLogo(logoAlpha.value, logoOffsetY.value + logoFloatY)
+            SplashLogo(logoAlpha.value, logoOffsetY.value + logoFloatY)
             Spacer(modifier = Modifier.height(32.dp))
-            splashText(textAlpha.value, textOffsetY.value)
+            SplashText(textAlpha.value, textOffsetY.value)
             Spacer(modifier = Modifier.height(48.dp))
-            splashLoader(loaderAlpha.value, loaderOffsetY.value, progress.value)
+            SplashLoader(loaderAlpha.value, loaderOffsetY.value, progress.value)
         }
     }
 }
@@ -187,7 +187,7 @@ private fun startEntranceAnimations(
 }
 
 @Composable
-private fun BoxScope.splashBackground() {
+private fun BoxScope.SplashBackground() {
     Box(
         modifier = Modifier
             .size(ORNAMENT_SIZE.dp)
@@ -218,7 +218,7 @@ private fun BoxScope.splashBackground() {
 }
 
 @Composable
-private fun splashLogo(alphaVal: Float, translationYVal: Float) {
+private fun SplashLogo(alphaVal: Float, translationYVal: Float) {
     Box(
         modifier = Modifier
             .graphicsLayer {
@@ -237,7 +237,7 @@ private fun splashLogo(alphaVal: Float, translationYVal: Float) {
 }
 
 @Composable
-private fun splashText(alphaVal: Float, translationYVal: Float) {
+private fun SplashText(alphaVal: Float, translationYVal: Float) {
     Column(
         modifier = Modifier
             .graphicsLayer {
@@ -270,7 +270,7 @@ private fun splashText(alphaVal: Float, translationYVal: Float) {
 }
 
 @Composable
-private fun splashLoader(alphaVal: Float, translationYVal: Float, progressVal: Float) {
+private fun SplashLoader(alphaVal: Float, translationYVal: Float, progressVal: Float) {
     Column(
         modifier = Modifier
             .graphicsLayer {
@@ -301,24 +301,24 @@ private fun splashLoader(alphaVal: Float, translationYVal: Float, progressVal: F
 
 @Preview(name = "Splash - Normal Device", widthDp = 360, heightDp = 640, showBackground = true)
 @Composable
-internal fun splashPreviewNormal() {
-    familyControlTheme {
-        splashScreen()
+internal fun SplashPreviewNormal() {
+    FamilyControlTheme {
+        SplashScreen()
     }
 }
 
 @Preview(name = "Splash - Large Device (Tablet Portrait)", widthDp = 768, heightDp = 1024, showBackground = true)
 @Composable
-internal fun splashPreviewLarge() {
-    familyControlTheme {
-        splashScreen()
+internal fun SplashPreviewLarge() {
+    FamilyControlTheme {
+        SplashScreen()
     }
 }
 
 @Preview(name = "Splash - Expanded Device (Landscape)", widthDp = 1280, heightDp = 800, showBackground = true)
 @Composable
-internal fun splashPreviewExpanded() {
-    familyControlTheme {
-        splashScreen()
+internal fun SplashPreviewExpanded() {
+    FamilyControlTheme {
+        SplashScreen()
     }
 }

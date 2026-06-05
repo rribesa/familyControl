@@ -32,7 +32,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun familyControlTheme(
+fun FamilyControlTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

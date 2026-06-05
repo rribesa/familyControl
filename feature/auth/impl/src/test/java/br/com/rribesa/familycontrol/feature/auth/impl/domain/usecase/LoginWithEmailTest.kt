@@ -17,16 +17,13 @@ class LoginWithEmailTest {
 
     @Test
     fun invoke_delegatesToRepository() = runTest {
-        // Given
         val email = "user@test.com"
         val password = "Strong1#"
         val expectedUser = User("1", email, "Test User", Date(0))
         coEvery { authRepository.login(email, password) } returns expectedUser
 
-        // When
         val result = useCase(email, password)
 
-        // Then
         assertEquals(expectedUser, result)
         coVerify(exactly = 1) { authRepository.login(email, password) }
     }
