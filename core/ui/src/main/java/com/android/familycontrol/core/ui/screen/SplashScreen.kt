@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.familycontrol.core.ui.R
 import com.android.familycontrol.core.ui.theme.FamilyControlTheme
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -83,20 +84,20 @@ fun SplashScreen(
         }
 
         launch {
-            delay(200)
+            delay(200.milliseconds)
             textAlpha.animateTo(1f, animationSpec = tween(800, easing = EaseOutQuad))
         }
         launch {
-            delay(200)
+            delay(200.milliseconds)
             textOffsetY.animateTo(0f, animationSpec = tween(800, easing = EaseOutQuad))
         }
 
         launch {
-            delay(400)
+            delay(400.milliseconds)
             loaderAlpha.animateTo(1f, animationSpec = tween(800, easing = EaseOutQuad))
         }
         launch {
-            delay(400)
+            delay(400.milliseconds)
             loaderOffsetY.animateTo(0f, animationSpec = tween(800, easing = EaseOutQuad))
         }
 
