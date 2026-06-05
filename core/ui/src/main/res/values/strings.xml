@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Controle da Família</string>
+    <string name="splash_title">Controle da Família</string>
+    <string name="splash_subtitle">Organize as finanças do seu lar com clareza, transparência e segurança.</string>
+    <string name="splash_loading">Carregando...</string>
+</resources>
