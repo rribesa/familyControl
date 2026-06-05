@@ -13,6 +13,8 @@ import br.com.rribesa.familycontrol.feature.auth.impl.domain.usecase.RegisterUse
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -25,29 +27,35 @@ abstract class AuthModule {
     abstract fun bindAuthRepository(
         impl: AuthRepositoryImpl
     ): AuthRepository
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class AuthUseCaseModule {
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindLoginWithEmailUseCase(
         impl: LoginWithEmail
     ): LoginWithEmailUseCase
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindLoginWithGoogleUseCase(
         impl: LoginWithGoogle
     ): LoginWithGoogleUseCase
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindRegisterUserUseCase(
         impl: RegisterUser
     ): RegisterUserUseCase
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindForgotPasswordUseCase(
         impl: ForgotPassword
     ): ForgotPasswordUseCase
 }
+
 
