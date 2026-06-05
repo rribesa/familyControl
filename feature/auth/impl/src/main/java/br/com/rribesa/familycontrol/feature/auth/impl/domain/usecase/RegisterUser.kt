@@ -9,6 +9,6 @@ class RegisterUser @Inject constructor(
     private val authRepository: AuthRepository
 ) : RegisterUserUseCase {
     override suspend fun invoke(email: String, name: String, password: String): User {
-        TODO("Not yet implemented")
+        return authRepository.register(email, name, password)
     }
 }

@@ -8,6 +8,6 @@ class ForgotPassword @Inject constructor(
     private val authRepository: AuthRepository
 ) : ForgotPasswordUseCase {
     override suspend fun invoke(email: String) {
-        TODO("Not yet implemented")
+        authRepository.sendPasswordResetEmail(email)
     }
 }

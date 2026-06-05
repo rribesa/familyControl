@@ -9,6 +9,6 @@ class LoginWithGoogle @Inject constructor(
     private val authRepository: AuthRepository
 ) : LoginWithGoogleUseCase {
     override suspend fun invoke(idToken: String): User {
-        TODO("Not yet implemented")
+        return authRepository.loginWithGoogle(idToken)
     }
 }

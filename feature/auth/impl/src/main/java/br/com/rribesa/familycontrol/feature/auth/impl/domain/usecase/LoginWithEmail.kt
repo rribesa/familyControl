@@ -9,6 +9,6 @@ class LoginWithEmail @Inject constructor(
     private val authRepository: AuthRepository
 ) : LoginWithEmailUseCase {
     override suspend fun invoke(email: String, password: String): User {
-        TODO("Not yet implemented")
+        return authRepository.login(email, password)
     }
 }
