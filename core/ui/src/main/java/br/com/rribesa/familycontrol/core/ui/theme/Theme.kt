@@ -1,6 +1,7 @@
 @file:Suppress("FunctionNaming")
 
-package com.android.familycontrol.core.ui.theme
+package br.com.rribesa.familycontrol.core.ui.theme
+
 
 
 import androidx.compose.material3.MaterialTheme

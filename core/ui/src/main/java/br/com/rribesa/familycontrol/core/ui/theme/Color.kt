@@ -1,6 +1,7 @@
 @file:Suppress("MagicNumber")
 
-package com.android.familycontrol.core.ui.theme
+package br.com.rribesa.familycontrol.core.ui.theme
+
 
 import androidx.compose.ui.graphics.Color
 

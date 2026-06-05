@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.android.familycontrol.core.ui"
+    namespace = "br.com.rribesa.familycontrol.core.ui"
     compileSdk = 36
 
     defaultConfig {

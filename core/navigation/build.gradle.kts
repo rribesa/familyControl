@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.android.familycontrol.core.navigation"
+    namespace = "br.com.rribesa.familycontrol.core.navigation"
     compileSdk = 36
 
     defaultConfig {

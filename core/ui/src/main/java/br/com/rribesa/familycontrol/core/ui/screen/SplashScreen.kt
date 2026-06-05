@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber", "LongMethod", "FunctionNaming")
 
-package com.android.familycontrol.core.ui.screen
+package br.com.rribesa.familycontrol.core.ui.screen
 
 
 import androidx.compose.animation.core.Animatable
@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.familycontrol.core.ui.R
-import com.android.familycontrol.core.ui.theme.FamilyControlTheme
+import br.com.rribesa.familycontrol.core.ui.R
+import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

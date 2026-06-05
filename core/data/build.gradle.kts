@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.android.familycontrol.core.data"
+    namespace = "br.com.rribesa.familycontrol.core.data"
     compileSdk = 36
 
     defaultConfig {

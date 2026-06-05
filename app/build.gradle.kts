@@ -7,10 +7,10 @@ plugins {
 }
 
 android {
-    namespace = "com.android.familycontrol"
+    namespace = "br.com.rribesa.familycontrol"
     compileSdk = 36
     defaultConfig {
-        applicationId = "com.android.familycontrol"
+        applicationId = "br.com.rribesa.familycontrol"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
