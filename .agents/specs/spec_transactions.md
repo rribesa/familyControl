@@ -1,5 +1,8 @@
 # Feature Spec: Transactions
 
+## Stitch Reference
+- Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
+
 ## Domain Layer
 - Entities: `Transaction` (id: UUID, amount, category, date, desc, userId).
 - UseCases: `AddTransactionUseCase`, `GetTransactionHistoryUseCase`, `SyncTransactionsUseCase`.

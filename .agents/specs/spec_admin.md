@@ -1,5 +1,8 @@
 # Feature Spec: Administration
 
+## Stitch Reference
+- Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
+
 ## Domain Layer
 - Entities: `FamilyMember`, `Role` (Admin/Viewer).
 - UseCases: `InviteMemberUseCase`, `UpdatePermissionsUseCase`, `GetFamilyListUseCase`.

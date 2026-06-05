@@ -1,5 +1,8 @@
 # Feature Spec: Dashboard
 
+## Stitch Reference
+- Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
+
 ## Domain Layer
 - Entities: 
   - `DashboardSummary` (totalIncome, totalExpenses, balance, currency).

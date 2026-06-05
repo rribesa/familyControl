@@ -1,5 +1,8 @@
 # Feature Spec: Authentication
 
+## Stitch Reference
+- Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
+
 ## Domain Layer
 - Entities: `User` (id, email, name, birthDate).
 - UseCases: `LoginWithEmailUseCase`, `LoginWithGoogleUseCase`, `RegisterUserUseCase`, `ForgotPasswordUseCase`.
