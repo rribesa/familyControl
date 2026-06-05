@@ -10,10 +10,8 @@ import br.com.rribesa.familycontrol.feature.auth.impl.domain.usecase.ForgotPassw
 import br.com.rribesa.familycontrol.feature.auth.impl.domain.usecase.LoginWithEmail
 import br.com.rribesa.familycontrol.feature.auth.impl.domain.usecase.LoginWithGoogle
 import br.com.rribesa.familycontrol.feature.auth.impl.domain.usecase.RegisterUser
-import com.google.firebase.auth.FirebaseAuth
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -51,12 +49,5 @@ abstract class AuthModule {
     abstract fun bindForgotPasswordUseCase(
         impl: ForgotPassword
     ): ForgotPasswordUseCase
-
-    companion object {
-        @Provides
-        @Singleton
-        fun provideFirebaseAuth(): FirebaseAuth {
-            return FirebaseAuth.getInstance()
-        }
-    }
 }
+
