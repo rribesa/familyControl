@@ -4,7 +4,7 @@
 - Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
 
 ## Domain Layer
-- Entities: `User` (id, email, name, birthDate).
+- Entities: `User` (id, email, name).
 - UseCases: `LoginWithEmailUseCase`, `LoginWithGoogleUseCase`, `RegisterUserUseCase`, `ForgotPasswordUseCase`.
 - Validation Rules: Password (8+ chars, 1 upper, 1 lower, 1 special, 1 number).
 

@@ -5,8 +5,6 @@ data class RegisterState(
     val fullNameErrorResId: Int? = null,
     val email: String = "",
     val emailErrorResId: Int? = null,
-    val birthDate: String = "",
-    val birthDateErrorResId: Int? = null,
     val password: String = "",
     val passwordErrorResId: Int? = null,
     val confirmPassword: String = "",

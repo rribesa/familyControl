@@ -28,7 +28,6 @@ class RegisterScreenTest {
 
         composeTestRule.onNodeWithText("Criar Conta").assertIsDisplayed()
         composeTestRule.onNodeWithText("Nome Completo").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Data de Nascimento").assertIsDisplayed()
         composeTestRule.onNodeWithText("Senha Forte").assertIsDisplayed()
         composeTestRule.onNodeWithText("Confirmar Senha").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cadastrar").assertIsDisplayed()

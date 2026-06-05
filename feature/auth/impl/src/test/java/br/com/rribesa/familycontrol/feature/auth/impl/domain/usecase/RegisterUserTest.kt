@@ -8,7 +8,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.Date
 
 class RegisterUserTest {
 
@@ -20,7 +19,7 @@ class RegisterUserTest {
         val email = "new@test.com"
         val name = "New User"
         val password = "Strong1#"
-        val expectedUser = User("2", email, name, Date(0))
+        val expectedUser = User("2", email, name)
         coEvery { authRepository.register(email, name, password) } returns expectedUser
 
         val result = useCase(email, name, password)

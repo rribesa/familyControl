@@ -8,7 +8,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.Date
 
 class LoginWithGoogleTest {
 
@@ -18,7 +17,7 @@ class LoginWithGoogleTest {
     @Test
     fun invoke_delegatesToRepository() = runTest {
         val idToken = "google_token_123"
-        val expectedUser = User("1", "google@test.com", "Google User", Date(0))
+        val expectedUser = User("1", "google@test.com", "Google User")
         coEvery { authRepository.loginWithGoogle(idToken) } returns expectedUser
 
         val result = useCase(idToken)

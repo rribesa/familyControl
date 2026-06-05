@@ -8,7 +8,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.Date
 
 class LoginWithEmailTest {
 
@@ -19,7 +18,7 @@ class LoginWithEmailTest {
     fun invoke_delegatesToRepository() = runTest {
         val email = "user@test.com"
         val password = "Strong1#"
-        val expectedUser = User("1", email, "Test User", Date(0))
+        val expectedUser = User("1", email, "Test User")
         coEvery { authRepository.login(email, password) } returns expectedUser
 
         val result = useCase(email, password)

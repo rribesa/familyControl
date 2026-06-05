@@ -36,7 +36,6 @@ class RegisterViewModel @Inject constructor(
         when (event) {
             is RegisterEvent.OnFullNameChanged -> updateFullName(event.name)
             is RegisterEvent.OnEmailChanged -> updateEmail(event.email)
-            is RegisterEvent.OnBirthDateChanged -> updateBirthDate(event.date)
             is RegisterEvent.OnPasswordChanged -> updatePassword(event.password)
             is RegisterEvent.OnConfirmPasswordChanged -> updateConfirmPassword(event.password)
             RegisterEvent.TogglePasswordVisibility -> togglePasswordVisibility()
@@ -65,15 +64,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun updateBirthDate(date: String) {
-        _state.update {
-            it.copy(
-                birthDate = date,
-                birthDateErrorResId = null,
-                errorMessageResId = null
-            )
-        }
-    }
+
 
     private fun updatePassword(password: String) {
         _state.update {
@@ -104,7 +95,6 @@ class RegisterViewModel @Inject constructor(
     private fun validateForm(
         name: String,
         email: String,
-        date: String,
         password: String,
         confirm: String
     ): Boolean {
@@ -120,11 +110,6 @@ class RegisterViewModel @Inject constructor(
             isValid = false
         } else if (!emailRegex.matches(email)) {
             _state.update { it.copy(emailErrorResId = R.string.error_invalid_email) }
-            isValid = false
-        }
-
-        if (date.isEmpty()) {
-            _state.update { it.copy(birthDateErrorResId = R.string.error_empty_field) }
             isValid = false
         }
 
@@ -144,14 +129,12 @@ class RegisterViewModel @Inject constructor(
     private fun performRegistration() {
         val currentName = _state.value.fullName.trim()
         val currentEmail = _state.value.email.trim()
-        val currentDate = _state.value.birthDate.trim()
         val currentPassword = _state.value.password
         val currentConfirmPassword = _state.value.confirmPassword
 
         val isValid = validateForm(
             name = currentName,
             email = currentEmail,
-            date = currentDate,
             password = currentPassword,
             confirm = currentConfirmPassword
         )

@@ -113,8 +113,7 @@ class AuthRepositoryImpl @Inject constructor(
         return User(
             id = uid,
             email = email.orEmpty(),
-            name = displayName.orEmpty(),
-            birthDate = null
+            name = displayName.orEmpty()
         )
     }
 }

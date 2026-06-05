@@ -33,7 +33,6 @@
     <string name="register_subtitle">Comece a organizar as finanças da sua casa de forma simples e transparente.</string>
     <string name="register_name_label">Nome Completo</string>
     <string name="register_name_placeholder">Ex: Maria Silva</string>
-    <string name="register_birthdate_label">Data de Nascimento</string>
     <string name="register_password_label">Senha Forte</string>
     <string name="register_password_placeholder">Mínimo 8 caracteres</string>
     <string name="register_confirm_password_label">Confirmar Senha</string>
