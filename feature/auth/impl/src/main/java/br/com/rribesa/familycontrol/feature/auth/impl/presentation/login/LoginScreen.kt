@@ -45,9 +45,8 @@ private const val SUBTITLE_MAX_WIDTH_FRACTION = 0.85f
 @Composable
 fun LoginScreen(
     state: LoginState,
+    webClientId: String,
     onEvent: (LoginEvent) -> Unit,
-    onForgotPasswordClicked: () -> Unit,
-    onRegisterClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -70,11 +69,12 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
             LoginFormCard(
                 state = state,
+                webClientId = webClientId,
                 onEvent = onEvent,
-                onForgotPasswordClicked = onForgotPasswordClicked
+                onForgotPasswordClicked = { onEvent(LoginEvent.OnForgotPasswordClicked) }
             )
             Spacer(modifier = Modifier.height(24.dp))
-            LoginFooter(onRegisterClicked = onRegisterClicked)
+            LoginFooter(onRegisterClicked = { onEvent(LoginEvent.OnRegisterClicked) })
             Spacer(modifier = Modifier.height(48.dp))
         }
     }
@@ -140,6 +140,7 @@ private fun LoginHeader() {
 @Composable
 private fun LoginFormCard(
     state: LoginState,
+    webClientId: String,
     onEvent: (LoginEvent) -> Unit,
     onForgotPasswordClicked: () -> Unit
 ) {
@@ -170,7 +171,7 @@ private fun LoginFormCard(
             ErrorBanner(state = state)
             SubmitButton(state = state, onEvent = onEvent)
             OrDivider()
-            GoogleButton(state = state, onEvent = onEvent)
+            GoogleButton(state = state, webClientId = webClientId, onEvent = onEvent)
         }
     }
 }
@@ -204,9 +205,8 @@ internal fun LoginPreviewNormal() {
     FamilyControlTheme {
         LoginScreen(
             state = LoginState(),
-            onEvent = {},
-            onForgotPasswordClicked = {},
-            onRegisterClicked = {}
+            webClientId = "",
+            onEvent = {}
         )
     }
 }
@@ -217,9 +217,8 @@ internal fun LoginPreviewLarge() {
     FamilyControlTheme {
         LoginScreen(
             state = LoginState(),
-            onEvent = {},
-            onForgotPasswordClicked = {},
-            onRegisterClicked = {}
+            webClientId = "",
+            onEvent = {}
         )
     }
 }
@@ -230,9 +229,8 @@ internal fun LoginPreviewExpanded() {
     FamilyControlTheme {
         LoginScreen(
             state = LoginState(),
-            onEvent = {},
-            onForgotPasswordClicked = {},
-            onRegisterClicked = {}
+            webClientId = "",
+            onEvent = {}
         )
     }
 }

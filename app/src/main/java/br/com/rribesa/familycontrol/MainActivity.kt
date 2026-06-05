@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
@@ -55,7 +56,7 @@ private fun AppNavDisplay(navigator: Navigator) {
                     SplashScreen(
                         modifier = Modifier.fillMaxSize(),
                         onSplashFinished = {
-                            navigator.navigateTo(Destination.Login)
+                            navigator.replace(Destination.Login)
                         }
                     )
                 }
@@ -87,10 +88,10 @@ private fun LoginRouteContent(navigator: Navigator) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 LoginEffect.NavigateToDashboard -> {
-                    navigator.navigateTo(Destination.Dashboard)
+                    navigator.clearAndNavigateTo(Destination.Dashboard)
                 }
                 LoginEffect.NavigateToRegister -> {
-                    navigator.navigateTo(Destination.Register)
+                    navigator.replace(Destination.Register)
                 }
                 LoginEffect.NavigateToForgotPassword -> {
                 }
@@ -100,14 +101,11 @@ private fun LoginRouteContent(navigator: Navigator) {
         }
     }
 
+    val webClientId = stringResource(id = R.string.default_web_client_id)
     LoginScreen(
         state = state,
+        webClientId = webClientId,
         onEvent = viewModel::onEvent,
-        onForgotPasswordClicked = {
-        },
-        onRegisterClicked = {
-            navigator.navigateTo(Destination.Register)
-        },
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -121,10 +119,10 @@ private fun RegisterRouteContent(navigator: Navigator) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 RegisterEffect.NavigateToDashboard -> {
-                    navigator.navigateTo(Destination.Dashboard)
+                    navigator.clearAndNavigateTo(Destination.Dashboard)
                 }
                 RegisterEffect.NavigateToLogin -> {
-                    navigator.navigateTo(Destination.Login)
+                    navigator.replace(Destination.Login)
                 }
                 is RegisterEffect.ShowError -> {
                 }
@@ -132,11 +130,13 @@ private fun RegisterRouteContent(navigator: Navigator) {
         }
     }
 
+    val webClientId = stringResource(id = R.string.default_web_client_id)
     RegisterScreen(
         state = state,
+        webClientId = webClientId,
         onEvent = viewModel::onEvent,
         onLoginClicked = {
-            navigator.navigateTo(Destination.Login)
+            navigator.replace(Destination.Login)
         },
         modifier = Modifier.fillMaxSize()
     )

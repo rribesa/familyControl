@@ -10,6 +10,19 @@ class Navigator(startDestination: Destination) {
         backStack.add(destination)
     }
 
+    fun replace(destination: Destination) {
+        if (backStack.isNotEmpty()) {
+            backStack[backStack.lastIndex] = destination
+        } else {
+            backStack.add(destination)
+        }
+    }
+
+    fun clearAndNavigateTo(destination: Destination) {
+        backStack.clear()
+        backStack.add(destination)
+    }
+
     fun goBack() {
         if (backStack.size > 1) {
             backStack.removeLast()

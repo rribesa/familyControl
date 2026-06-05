@@ -32,6 +32,9 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 kotlin {
@@ -70,6 +73,11 @@ dependencies {
     // Firebase Auth / SDK (Concrete Datasource)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+
+    // Credentials & Google Identity
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // Coil Image loading
     implementation(libs.coil.compose)

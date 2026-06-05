@@ -7,5 +7,6 @@ sealed interface RegisterEvent {
     data class OnConfirmPasswordChanged(val password: String) : RegisterEvent
     data object TogglePasswordVisibility : RegisterEvent
     data object OnRegisterClicked : RegisterEvent
-    data object OnGoogleRegisterClicked : RegisterEvent
+    data class OnGoogleRegisterClicked(val idToken: String) : RegisterEvent
 }
+

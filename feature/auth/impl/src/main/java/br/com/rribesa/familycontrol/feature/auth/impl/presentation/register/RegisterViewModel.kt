@@ -40,7 +40,7 @@ class RegisterViewModel @Inject constructor(
             is RegisterEvent.OnConfirmPasswordChanged -> updateConfirmPassword(event.password)
             RegisterEvent.TogglePasswordVisibility -> togglePasswordVisibility()
             RegisterEvent.OnRegisterClicked -> performRegistration()
-            RegisterEvent.OnGoogleRegisterClicked -> performGoogleRegistration()
+            is RegisterEvent.OnGoogleRegisterClicked -> performGoogleRegistration(event.idToken)
         }
     }
 
@@ -63,8 +63,6 @@ class RegisterViewModel @Inject constructor(
             )
         }
     }
-
-
 
     private fun updatePassword(password: String) {
         _state.update {
@@ -92,54 +90,36 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun validateForm(
-        name: String,
-        email: String,
-        password: String,
-        confirm: String
-    ): Boolean {
-        var isValid = true
-
-        if (name.isEmpty()) {
-            _state.update { it.copy(fullNameErrorResId = R.string.error_empty_field) }
-            isValid = false
-        }
-
-        if (email.isEmpty()) {
-            _state.update { it.copy(emailErrorResId = R.string.error_empty_field) }
-            isValid = false
-        } else if (!emailRegex.matches(email)) {
-            _state.update { it.copy(emailErrorResId = R.string.error_invalid_email) }
-            isValid = false
-        }
-
-        if (!PasswordValidator.isValid(password)) {
-            _state.update { it.copy(passwordErrorResId = R.string.error_invalid_password) }
-            isValid = false
-        }
-
-        if (confirm != password) {
-            _state.update { it.copy(confirmPasswordErrorResId = R.string.error_password_mismatch) }
-            isValid = false
-        }
-
-        return isValid
-    }
-
     private fun performRegistration() {
         val currentName = _state.value.fullName.trim()
         val currentEmail = _state.value.email.trim()
         val currentPassword = _state.value.password
         val currentConfirmPassword = _state.value.confirmPassword
 
-        val isValid = validateForm(
-            name = currentName,
-            email = currentEmail,
-            password = currentPassword,
-            confirm = currentConfirmPassword
-        )
+        var hasError = false
 
-        if (!isValid) return
+        if (currentName.isEmpty()) {
+            _state.update { it.copy(fullNameErrorResId = R.string.error_empty_field) }
+            hasError = true
+        }
+
+        if (currentEmail.isEmpty()) {
+            _state.update { it.copy(emailErrorResId = R.string.error_empty_field) }
+            hasError = true
+        } else if (!emailRegex.matches(currentEmail)) {
+            _state.update { it.copy(emailErrorResId = R.string.error_invalid_email) }
+            hasError = true
+        }
+
+        if (!PasswordValidator.isValid(currentPassword)) {
+            _state.update { it.copy(errorMessageResId = R.string.error_invalid_password) }
+            hasError = true
+        } else if (currentPassword != currentConfirmPassword) {
+            _state.update { it.copy(errorMessageResId = R.string.error_password_mismatch) }
+            hasError = true
+        }
+
+        if (hasError) return
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
@@ -150,6 +130,14 @@ class RegisterViewModel @Inject constructor(
                     password = currentPassword
                 )
             }.onSuccess {
+                _state.update {
+                    it.copy(
+                        fullName = "",
+                        email = "",
+                        password = "",
+                        confirmPassword = ""
+                    )
+                }
                 _effect.emit(RegisterEffect.NavigateToDashboard)
             }.onFailure { e ->
                 if (e is kotlinx.coroutines.CancellationException) throw e
@@ -166,12 +154,20 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun performGoogleRegistration() {
+    private fun performGoogleRegistration(idToken: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageResId = null) }
             kotlin.runCatching {
-                loginWithGoogleUseCase(idToken = "stub_google_id_token")
+                loginWithGoogleUseCase(idToken = idToken)
             }.onSuccess {
+                _state.update {
+                    it.copy(
+                        fullName = "",
+                        email = "",
+                        password = "",
+                        confirmPassword = ""
+                    )
+                }
                 _effect.emit(RegisterEffect.NavigateToDashboard)
             }.onFailure { e ->
                 if (e is kotlinx.coroutines.CancellationException) throw e

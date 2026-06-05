@@ -5,5 +5,8 @@ sealed interface LoginEvent {
     data class OnPasswordChanged(val password: String) : LoginEvent
     data object TogglePasswordVisibility : LoginEvent
     data object OnLoginClicked : LoginEvent
-    data object OnGoogleLoginClicked : LoginEvent
+    data class OnGoogleLoginClicked(val idToken: String) : LoginEvent
+    data object OnForgotPasswordClicked : LoginEvent
+    data object OnRegisterClicked : LoginEvent
 }
+
