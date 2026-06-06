@@ -44,4 +44,5 @@
     <string name="register_terms_link">Termos de Uso</string>
     <string name="register_terms_and"> e </string>
     <string name="register_privacy_link">Política de Privacidade</string>
+    <string name="register_disclaimer_formatted">%1$s%2$s%3$s%4$s.</string>
 </resources>
