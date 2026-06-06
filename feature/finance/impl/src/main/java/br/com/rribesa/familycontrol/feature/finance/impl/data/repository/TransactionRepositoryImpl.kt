@@ -4,6 +4,7 @@ import br.com.rribesa.familycontrol.feature.finance.api.domain.model.Transaction
 import br.com.rribesa.familycontrol.feature.finance.api.domain.repository.TransactionRepository
 import br.com.rribesa.familycontrol.feature.finance.impl.data.database.TransactionDao
 import br.com.rribesa.familycontrol.feature.finance.impl.data.database.TransactionEntity
+import br.com.rribesa.familycontrol.core.data.FirestorePaths
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +58,7 @@ class TransactionRepositoryImpl @Inject constructor(
 
             // 2. Download remote transactions from Firestore
             try {
-                val snapshot = firestore.collection("transactions")
+                val snapshot = firestore.collection(FirestorePaths.TRANSACTIONS)
                     .whereEqualTo("userId", userId)
                     .get()
                     .await()
@@ -98,7 +99,7 @@ class TransactionRepositoryImpl @Inject constructor(
             "description" to transaction.description,
             "userId" to transaction.userId
         )
-        firestore.collection("transactions")
+        firestore.collection(FirestorePaths.TRANSACTIONS)
             .document(transaction.id.toString())
             .set(data)
             .await()

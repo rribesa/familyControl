@@ -1,4 +1,4 @@
-# Feature Spec: System & Connectivity
+# Feature Spec: System & Infrastructure (Updated)
 
 ## Stitch Reference
 - Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
@@ -17,3 +17,7 @@
 ## Tests
 - MockK: Simulate connection status changes.
 - Compose UI Test: Validate display of offline/empty state illustrations.
+
+## Database Initialization
+- **Firestore Setup:** Upon first app boot (if authenticated), the system must verify the collection schema (e.g., `users`, `transactions`, `categories`). If missing, initialize the database structure using Firebase MCP skills.
+

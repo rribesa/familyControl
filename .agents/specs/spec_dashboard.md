@@ -7,14 +7,16 @@
 - Entities: 
   - `DashboardSummary` (totalIncome, totalExpenses, balance, currency).
   - `Transaction` (id, title, amount, type [INCOME, EXPENSE], category, timestamp).
-- UseCases: `GetDashboardSummaryUseCase`, `GetRecentTransactionsUseCase`.
+  `Budget`, `CategorySummary`, `UserLimit`.
+- UseCases: `GetDashboardSummaryUseCase`, `GetRecentTransactionsUseCase`,`GetDashboardStatsUseCase`, `ManageCategoriesUseCase` (Add/Edit/Delete).
 - Business Rules:
+- Category Management: Allow users to create custom categories that reflect in transactions and reporting.
   - Balance = TotalIncome - TotalExpenses.
   - Recent transactions list should show the top 5 latest entries.
 
 ## Data Layer
 - Repository Interface: `DashboardRepository` (getSummary, getTransactions).
-- DataSource: Room Database (Local Source of Truth) & Firestore (Remote Synchronization).
+- DataSource: Room Database (Local Cache) & Firestore (Remote backend and source of truth managed via Firebase MCP).
 
 ## UI/Compose
 - Screens: Dashboard (SCREEN_01).
