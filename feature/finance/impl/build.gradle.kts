@@ -44,11 +44,21 @@ kotlin {
 dependencies {
     // Public Contract Dependency
     implementation(project(":feature:finance:public"))
+    implementation(project(":feature:auth:public"))
 
     // Core Shared Modules
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
     implementation(project(":core:data"))
+
+    // Room local DB
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // Firebase remote DB
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
 
     // Android/Compose Core
     implementation(libs.androidx.core.ktx)

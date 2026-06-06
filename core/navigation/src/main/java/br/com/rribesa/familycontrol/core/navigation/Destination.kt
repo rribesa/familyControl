@@ -7,4 +7,7 @@ sealed interface Destination {
     data object Dashboard : Destination
     data object PasswordRecovery : Destination
     data object Report : Destination
+    data object RegisterTransaction : Destination
+    data object History : Destination
 }
+

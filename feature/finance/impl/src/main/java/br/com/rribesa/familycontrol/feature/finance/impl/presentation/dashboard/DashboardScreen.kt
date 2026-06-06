@@ -3,6 +3,7 @@ package br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +22,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -91,11 +94,26 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 BudgetLimitProgressCard(stats = state.budgetStats)
                 Spacer(modifier = Modifier.height(16.dp))
-                QuickCategoriesList(categories = state.categorySummaries)
+                QuickCategoriesList(
+                    categories = state.categorySummaries,
+                    onViewHistoryClicked = { onEvent(DashboardEvent.OnViewHistoryClicked) }
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 ReportNavigationButton(onClick = { onEvent(DashboardEvent.OnReportClicked) })
             }
             Spacer(modifier = Modifier.height(48.dp))
+        }
+
+        FloatingActionButton(
+            onClick = { onEvent(DashboardEvent.OnAddTransactionClicked) },
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp)
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
     }
 }
@@ -311,13 +329,27 @@ private fun getBudgetHealthText(status: HealthStatus): String {
 
 @Composable
 @Suppress("MagicNumber")
-private fun QuickCategoriesList(categories: List<CategorySummary>) {
-    Text(
-        text = "Gastos por Categoria",
-        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-        color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)
-    )
+private fun QuickCategoriesList(
+    categories: List<CategorySummary>,
+    onViewHistoryClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Gastos por Categoria",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = "Ver Histórico",
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable(onClick = onViewHistoryClicked)
+        )
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
