@@ -291,10 +291,13 @@ fun AlreadyHaveAccountLink(onLoginClicked: () -> Unit) {
 @Composable
 fun RegisterDisclaimer() {
     Text(
-        text = stringResource(id = R.string.register_terms_prefix) +
-                stringResource(id = R.string.register_terms_link) +
-                stringResource(id = R.string.register_terms_and) +
-                stringResource(id = R.string.register_privacy_link) + ".",
+        text = stringResource(
+            id = R.string.register_disclaimer_formatted,
+            stringResource(id = R.string.register_terms_prefix),
+            stringResource(id = R.string.register_terms_link),
+            stringResource(id = R.string.register_terms_and),
+            stringResource(id = R.string.register_privacy_link)
+        ),
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center,

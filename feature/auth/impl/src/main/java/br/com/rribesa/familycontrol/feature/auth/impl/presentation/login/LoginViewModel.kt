@@ -1,20 +1,11 @@
 package br.com.rribesa.familycontrol.feature.auth.impl.presentation.login
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.GetCredentialException
+import br.com.rribesa.familycontrol.core.ui.R
 import br.com.rribesa.familycontrol.feature.auth.api.domain.usecase.LoginWithEmailUseCase
 import br.com.rribesa.familycontrol.feature.auth.api.domain.usecase.LoginWithGoogleUseCase
-import br.com.rribesa.familycontrol.core.ui.R
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -149,40 +140,5 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onGoogleSignInClicked(context: Context, webClientId: String) {
-        viewModelScope.launch {
-            try {
-                val activity = context.findActivity() ?: return@launch
-                val credentialManager = CredentialManager.create(context)
-                val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(webClientId)
-                    .setAutoSelectEnabled(false)
-                    .build()
-                val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(googleIdOption)
-                    .build()
-                val result = credentialManager.getCredential(activity, request)
-                val credential = result.credential
-                val isGoogleToken = credential is CustomCredential &&
-                        credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-                if (isGoogleToken) {
-                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                    performGoogleLogin(googleIdTokenCredential.idToken)
-                }
-            } catch (e: GetCredentialException) {
-                Log.e("LoginViewModel", "Google sign-in failed", e)
-            }
-        }
-    }
-
-    private fun Context.findActivity(): Activity? {
-        var context = this
-        while (context is ContextWrapper) {
-            if (context is Activity) return context
-            context = context.baseContext
-        }
-        return null
-    }
 }
 
