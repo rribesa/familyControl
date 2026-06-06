@@ -1,4 +1,4 @@
-# Agent Context: Android Financial App
+# Agent Context: Android Financial App (FamilyControl)
 
 ## Purpose
 Maintain and evolve the Family Budget Control application.
@@ -6,26 +6,24 @@ Maintain and evolve the Family Budget Control application.
 ## Architecture & Standards
 - Pattern: Clean Architecture + MVVM + MVI (UDF).
 - Structure: Multi-module (Feature:public / Feature:impl).
-- Principles: SOLID, Single Source of Truth (Repository Pattern).
-- UseCases: Single function, `operator fun invoke()`. Interface name `*UseCase`, Impl name `*`.
+- UseCases: Single function, `operator fun invoke()`.
+- **UI Logic Rules:** No business logic in Views. Views must strictly observe `ViewState` and emit `ViewEvents`. All logic must reside in ViewModel or UseCases.
 
 ## Tech Stack
-- Language: Kotlin, Hilt (DI), Navigation 3, Compose (UI), Room (Local), Firestore (Remote), Coil (Images).
+- Kotlin, Hilt, Navigation 3, Compose, Room, Firestore, Coil.
 - Dependencies: TOML (Version Catalog).
 
 ## Skills & Tooling (MCP)
-- Always prioritize the use of available MCP skills for file system operations, code analysis, Git operations, and environment configuration.
-- When performing refactoring or implementation, use the skill to verify existing code before applying changes.
-- Ensure all automated tasks (linting, testing) are executed via skills whenever possible.
+- Always prioritize MCP skills for file system, Git, and automated tasks.
+- Must execute `./gradlew detekt -PautoCorrect=true` before finalizing any feature.
 
 ## Development Rules
 - Security: No hardcoded keys/secrets. Use Proguard/R8.
-- Quality: Detekt for static analysis (Use skill for execution).
 - Testing: 100% Domain/Presentation coverage + Compose UI tests must pass.
 - Previews: 3 mandatory previews per Composable (Normal, Large, Expanded).
-- Internationalization (i18n): All text must be in `strings.xml`. Hardcoding is forbidden.
+- i18n: All text MUST be in `strings.xml`. Hardcoding is strictly forbidden.
 - Imports: No wildcards. No deprecated APIs.
 
 ## Acceptance Criteria
-- Pixel-perfect to Stitch mockups.
-- Offline-first logic for "Lançar Gastos" (Unique UUID per transaction).
+- Pixel-perfect to Stitch (https://stitch.withgoogle.com/projects/16629036793824138364).
+- Offline-first logic (Unique UUID per transaction).

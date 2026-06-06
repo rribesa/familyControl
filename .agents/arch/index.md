@@ -1,15 +1,14 @@
-# Agent Workflow Index: FamilyControl
+# Agent Workflow Index: FamilyControl (Automated Pipeline)
 
 ## Process Flow
-1. Software Engineer: Defines interfaces + Architecture.
-2. Architect (Human): Approves interfaces.
-3. QA Agent: Unit/UI Tests (MockK) + Compose UI test validation.
-4. Developer Agent: Implements concrete classes + 3 Previews.
-5. Software Engineer (Reviewer): Review, AC compliance, docs, debt classification.
-6. Architect (Human): Final approval.
-7. Execution: Commit to branch `feat/[name]`, `upd/[name]`, `core/[name]`, `fix/[name]`.
+1. Engineer: Defines interfaces -> Triggers QA.
+2. QA: Develops Tests -> Triggers Developer.
+3. Developer: Implements Logic (ViewModel) & UI (UDF) -> Triggers Reviewer.
+4. Reviewer: Audits (Security/Leaks/Architecture) + Detekt -> Triggers Human.
+5. Human: Final Approval -> Commit (`feat/[name]`, `fix/[name]`, etc.).
 
-## Documentation Requirements
-- All feature docs reside in `/docs`.
-- Debt Classification: CRITICAL, HIGH, MEDIUM, LOW.
-- MEDIUM/LOW debts require human approval.
+## Git Standards
+- feat/[name], upd/[name], core/[name], fix/[name].
+
+## Documentation
+- All features must have an audit report in `/docs`.
