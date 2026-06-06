@@ -23,7 +23,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.text.style.TextAlign
+import coil.compose.AsyncImage
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -66,7 +71,6 @@ fun DashboardScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         DashboardBackgroundBlur(modifier = Modifier.align(Alignment.TopEnd))
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +81,6 @@ fun DashboardScreen(
             Spacer(modifier = Modifier.height(24.dp))
             DashboardHeader(isLoading = state.isLoading, onRefresh = { onEvent(DashboardEvent.OnRefresh) })
             Spacer(modifier = Modifier.height(16.dp))
-
             AnimatedVisibility(visible = state.errorMessageResId != null) {
                 Text(
                     text = state.errorMessageResId?.let { stringResource(id = it) }.orEmpty(),
@@ -86,9 +89,15 @@ fun DashboardScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-
             if (state.isLoading && state.budgetStats.budgetLimit == 0.0) {
                 DashboardLoadingContainer()
+            } else if (state.budgetStats.totalIncome == 0.0 &&
+                state.budgetStats.totalExpenses == 0.0 &&
+                state.categorySummaries.isEmpty()
+            ) {
+                DashboardWelcomeEmptyState(
+                    onConfigureClick = { onEvent(DashboardEvent.OnAddTransactionClicked) }
+                )
             } else {
                 MetricsGrid(stats = state.budgetStats)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -103,18 +112,14 @@ fun DashboardScreen(
             }
             Spacer(modifier = Modifier.height(48.dp))
         }
-
         FloatingActionButton(
             onClick = { onEvent(DashboardEvent.OnAddTransactionClicked) },
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp)
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
-        }
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp),
+            content = { Icon(imageVector = Icons.Default.Add, contentDescription = null) }
+        )
     }
 }
 
@@ -467,5 +472,172 @@ internal fun DashboardPreviewExpanded() {
             ),
             onEvent = {}
         )
+    }
+}
+
+@Composable
+private fun DashboardWelcomeIllustration(modifier: Modifier = Modifier) {
+    val illustrationUrl = "https://lh3.googleusercontent.com/aida/" +
+        "AP1WRLsXbN1iLsOena7GlHN6frOZz8bD5SSycCC0AAK5AlT9L7zJk57_" +
+        "TSD5GQxHRF4eXN4i3IJHGYersKK5Q-1z8yx2930_3mNTRxVJESkUoqDC" +
+        "jH-n4ymU0pmABX4zGEDfB8W_G832G4IiqUWzpuVLRb1Zr8rdp0H6OWJ5" +
+        "7I22yf6uvL8zHtTpgwD8Q_9VPbZrm_Ulbuax-samCzS36GRfsAAlsW3e" +
+        "IF8otlS2NQp4s-u2vJwYev7wLX5vu4jd"
+    Box(
+        modifier = modifier
+            .size(240.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)),
+        contentAlignment = Alignment.Center
+    ) {
+        AsyncImage(
+            model = illustrationUrl,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        )
+    }
+}
+
+@Composable
+private fun DashboardWelcomeCta(
+    onConfigureClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Button(
+            onClick = onConfigureClick,
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            modifier = Modifier.fillMaxWidth().height(56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(id = R.string.empty_state_welcome_btn_configure),
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+        }
+
+        Button(
+            onClick = {},
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+            ),
+            modifier = Modifier.fillMaxWidth().height(56.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Lightbulb,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(id = R.string.empty_state_welcome_btn_how_it_works),
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+        }
+    }
+}
+
+@Composable
+private fun DashboardWelcomeTip(modifier: Modifier = Modifier) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        ),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column {
+                Text(
+                    text = stringResource(id = R.string.empty_state_welcome_tip_title),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(id = R.string.empty_state_welcome_tip_desc),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Suppress("MagicNumber")
+private fun DashboardWelcomeEmptyState(
+    onConfigureClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        DashboardWelcomeIllustration()
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = stringResource(id = R.string.empty_state_welcome_title),
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = stringResource(id = R.string.empty_state_welcome_desc),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
+        DashboardWelcomeCta(onConfigureClick = onConfigureClick)
+        Spacer(modifier = Modifier.height(24.dp))
+        DashboardWelcomeTip()
     }
 }

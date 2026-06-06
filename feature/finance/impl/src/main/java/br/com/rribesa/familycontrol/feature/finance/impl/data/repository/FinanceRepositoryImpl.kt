@@ -1,69 +1,94 @@
 package br.com.rribesa.familycontrol.feature.finance.impl.data.repository
 
 import br.com.rribesa.familycontrol.core.data.FirestorePaths
+import br.com.rribesa.familycontrol.feature.auth.api.domain.repository.AuthRepository
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.BudgetStats
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.CategorySummary
 import br.com.rribesa.familycontrol.feature.finance.api.domain.repository.FinanceRepository
+import br.com.rribesa.familycontrol.feature.finance.impl.data.database.TransactionDao
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+@OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("MagicNumber")
 class FinanceRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val transactionDao: TransactionDao,
+    private val authRepository: AuthRepository
 ) : FinanceRepository {
 
-    override fun getBudgetStats(): Flow<BudgetStats> = callbackFlow {
+    private fun getBudgetLimit(): Flow<Double> = callbackFlow {
         val listener = firestore.collection(FirestorePaths.BUDGETS)
             .document("default_budget")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    trySend(4000.0)
                     return@addSnapshotListener
                 }
-                if (snapshot != null && snapshot.exists()) {
-                    val totalIncome = snapshot.getDouble("totalIncome") ?: 5000.0
-                    val totalExpenses = snapshot.getDouble("totalExpenses") ?: 3500.0
-                    val budgetLimit = snapshot.getDouble("budgetLimit") ?: 4000.0
-                    trySend(BudgetStats(totalIncome, totalExpenses, budgetLimit))
-                } else {
-                    trySend(BudgetStats(5000.0, 3500.0, 4000.0))
-                }
+                val limit = snapshot?.getDouble("budgetLimit") ?: 4000.0
+                trySend(limit)
             }
         awaitClose { listener.remove() }
     }
 
-    override fun getCategorySummaries(): Flow<List<CategorySummary>> = callbackFlow {
-        val listener = firestore.collection(FirestorePaths.CATEGORIES)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                if (snapshot != null && !snapshot.isEmpty) {
-                    val summaries = snapshot.documents.mapNotNull { doc ->
-                        val name = doc.getString("name") ?: return@mapNotNull null
-                        val amount = doc.getDouble("amount") ?: return@mapNotNull null
-                        val percentage = doc.getDouble("percentage") ?: return@mapNotNull null
-                        CategorySummary(name, amount, percentage)
-                    }
-                    trySend(summaries)
-                } else {
-                    trySend(
-                        listOf(
-                            CategorySummary("Alimentação", 1200.0, 30.0),
-                            CategorySummary("Moradia", 1500.0, 37.5),
-                            CategorySummary("Transporte", 500.0, 12.5),
-                            CategorySummary("Lazer", 300.0, 7.5)
-                        )
+    override fun getBudgetStats(): Flow<BudgetStats> {
+        return authRepository.getCurrentUser().flatMapLatest { user ->
+            if (user == null) {
+                flowOf(BudgetStats(0.0, 0.0, 4000.0))
+            } else {
+                combine(
+                    transactionDao.getTransactions(user.id),
+                    getBudgetLimit()
+                ) { entities, limit ->
+                    val totalIncome = entities
+                        .filter { it.category == "Salário" }
+                        .sumOf { it.amount }
+                    val totalExpenses = entities
+                        .filter { it.category != "Salário" }
+                        .sumOf { it.amount }
+                    BudgetStats(
+                        totalIncome = totalIncome,
+                        totalExpenses = totalExpenses,
+                        budgetLimit = limit
                     )
                 }
             }
-        awaitClose { listener.remove() }
+        }
+    }
+
+    override fun getCategorySummaries(): Flow<List<CategorySummary>> {
+        return authRepository.getCurrentUser().flatMapLatest { user ->
+            if (user == null) {
+                flowOf(emptyList())
+            } else {
+                transactionDao.getTransactions(user.id).map { entities ->
+                    val expenses = entities.filter { it.category != "Salário" }
+                    val totalExpenses = expenses.sumOf { it.amount }
+                    
+                    val categories = listOf("Alimentação", "Moradia", "Transporte", "Lazer", "Outros")
+                    
+                    categories.map { cat ->
+                        val amount = expenses.filter { it.category == cat }.sumOf { it.amount }
+                        val percentage = if (totalExpenses > 0) (amount / totalExpenses) * 100.0 else 0.0
+                        CategorySummary(
+                            category = cat,
+                            amount = amount,
+                            percentage = percentage
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

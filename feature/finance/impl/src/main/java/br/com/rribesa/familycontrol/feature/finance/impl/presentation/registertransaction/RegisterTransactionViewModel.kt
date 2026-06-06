@@ -92,7 +92,15 @@ class RegisterTransactionViewModel @Inject constructor(
 
                 addTransactionUseCase(transaction)
 
-                _state.update { it.copy(isLoading = false, success = true) }
+                _state.update {
+                    it.copy(
+                        amount = "",
+                        category = "",
+                        description = "",
+                        isLoading = false,
+                        success = true
+                    )
+                }
                 _effect.emit(RegisterTransactionEffect.ShowSuccessMessage)
                 _effect.emit(RegisterTransactionEffect.NavigateBack)
             } catch (e: Exception) {
