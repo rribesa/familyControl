@@ -20,6 +20,7 @@ class RegisterScreenTest {
             FamilyControlTheme {
                 RegisterScreen(
                     state = state,
+                    webClientId = "",
                     onEvent = {},
                     onLoginClicked = {}
                 )
@@ -40,6 +41,7 @@ class RegisterScreenTest {
             FamilyControlTheme {
                 RegisterScreen(
                     state = state,
+                    webClientId = "",
                     onEvent = {},
                     onLoginClicked = {}
                 )
@@ -56,6 +58,7 @@ class RegisterScreenTest {
             FamilyControlTheme {
                 RegisterScreen(
                     state = state,
+                    webClientId = "",
                     onEvent = {},
                     onLoginClicked = {}
                 )

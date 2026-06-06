@@ -22,9 +22,8 @@ class LoginScreenTest {
             FamilyControlTheme {
                 LoginScreen(
                     state = state,
-                    onEvent = {},
-                    onForgotPasswordClicked = {},
-                    onRegisterClicked = {}
+                    webClientId = "",
+                    onEvent = {}
                 )
             }
         }
@@ -43,9 +42,8 @@ class LoginScreenTest {
             FamilyControlTheme {
                 LoginScreen(
                     state = state,
-                    onEvent = {},
-                    onForgotPasswordClicked = {},
-                    onRegisterClicked = {}
+                    webClientId = "",
+                    onEvent = {}
                 )
             }
         }
@@ -60,9 +58,8 @@ class LoginScreenTest {
             FamilyControlTheme {
                 LoginScreen(
                     state = state,
-                    onEvent = {},
-                    onForgotPasswordClicked = {},
-                    onRegisterClicked = {}
+                    webClientId = "",
+                    onEvent = {}
                 )
             }
         }
