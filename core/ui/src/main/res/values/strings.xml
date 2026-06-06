@@ -54,4 +54,18 @@
     <string name="password_recovery_btn_send">Enviar Link</string>
     <string name="password_recovery_btn_back_to_login">Voltar para o Login</string>
     <string name="password_recovery_success">Link de recuperação enviado com sucesso para o seu e-mail.</string>
+
+    <!-- Dashboard & Report Screens -->
+    <string name="dashboard_title">Visão Geral</string>
+    <string name="dashboard_total_income">Receitas</string>
+    <string name="dashboard_total_expenses">Despesas</string>
+    <string name="dashboard_balance">Saldo</string>
+    <string name="dashboard_limit">Limite do Orçamento</string>
+    <string name="dashboard_health_healthy">Dentro do orçamento</string>
+    <string name="dashboard_health_warning">Próximo ao limite</string>
+    <string name="dashboard_health_critical">Orçamento estourado</string>
+    <string name="dashboard_btn_report">Ver Relatório Completo</string>
+    <string name="report_title">Relatório de Gastos</string>
+    <string name="report_total_expenses">Total de Despesas</string>
+    <string name="report_btn_back">Voltar</string>
 </resources>

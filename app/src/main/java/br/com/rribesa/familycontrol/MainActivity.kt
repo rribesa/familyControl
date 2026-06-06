@@ -3,13 +3,10 @@ package br.com.rribesa.familycontrol
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +26,12 @@ import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.Regi
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryEffect
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryScreen
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard.DashboardEffect
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard.DashboardScreen
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard.DashboardViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportEffect
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportScreen
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -73,12 +76,10 @@ private fun AppNavDisplay(navigator: Navigator) {
                     PasswordRecoveryRouteContent(navigator)
                 }
                 Destination.Dashboard -> NavEntry(destination) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Dashboard Screen (Placeholder)")
-                    }
+                    DashboardRouteContent(navigator)
+                }
+                Destination.Report -> NavEntry(destination) {
+                    ReportRouteContent(navigator)
                 }
             }
         }
@@ -172,4 +173,49 @@ private fun PasswordRecoveryRouteContent(navigator: Navigator) {
         modifier = Modifier.fillMaxSize()
     )
 }
+
+@Composable
+private fun DashboardRouteContent(navigator: Navigator) {
+    val viewModel: DashboardViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                DashboardEffect.NavigateToReport -> {
+                    navigator.navigateTo(Destination.Report)
+                }
+            }
+        }
+    }
+
+    DashboardScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun ReportRouteContent(navigator: Navigator) {
+    val viewModel: ReportViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                ReportEffect.NavigateBack -> {
+                    navigator.goBack()
+                }
+            }
+        }
+    }
+
+    ReportScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
 
