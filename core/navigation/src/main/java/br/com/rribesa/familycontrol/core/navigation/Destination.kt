@@ -5,4 +5,5 @@ sealed interface Destination {
     data object Login : Destination
     data object Register : Destination
     data object Dashboard : Destination
+    data object PasswordRecovery : Destination
 }

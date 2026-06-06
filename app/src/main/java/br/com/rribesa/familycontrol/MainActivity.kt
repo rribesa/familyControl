@@ -26,6 +26,9 @@ import br.com.rribesa.familycontrol.feature.auth.impl.presentation.login.LoginVi
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterEffect
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterScreen
 import br.com.rribesa.familycontrol.feature.auth.impl.presentation.register.RegisterViewModel
+import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryEffect
+import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryScreen
+import br.com.rribesa.familycontrol.feature.auth.impl.presentation.passwordrecovery.PasswordRecoveryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -66,6 +69,9 @@ private fun AppNavDisplay(navigator: Navigator) {
                 Destination.Register -> NavEntry(destination) {
                     RegisterRouteContent(navigator)
                 }
+                Destination.PasswordRecovery -> NavEntry(destination) {
+                    PasswordRecoveryRouteContent(navigator)
+                }
                 Destination.Dashboard -> NavEntry(destination) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -94,6 +100,7 @@ private fun LoginRouteContent(navigator: Navigator) {
                     navigator.replace(Destination.Register)
                 }
                 LoginEffect.NavigateToForgotPassword -> {
+                    navigator.replace(Destination.PasswordRecovery)
                 }
                 is LoginEffect.ShowError -> {
                 }
@@ -141,3 +148,28 @@ private fun RegisterRouteContent(navigator: Navigator) {
         modifier = Modifier.fillMaxSize()
     )
 }
+
+@Composable
+private fun PasswordRecoveryRouteContent(navigator: Navigator) {
+    val viewModel: PasswordRecoveryViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                PasswordRecoveryEffect.NavigateToLogin -> {
+                    navigator.replace(Destination.Login)
+                }
+                is PasswordRecoveryEffect.ShowError -> {
+                }
+            }
+        }
+    }
+
+    PasswordRecoveryScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
