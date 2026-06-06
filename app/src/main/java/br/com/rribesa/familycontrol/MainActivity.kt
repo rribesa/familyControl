@@ -32,6 +32,12 @@ import br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard.
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportEffect
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportScreen
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionEffect
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionScreen
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryEffect
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryScreen
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -80,6 +86,12 @@ private fun AppNavDisplay(navigator: Navigator) {
                 }
                 Destination.Report -> NavEntry(destination) {
                     ReportRouteContent(navigator)
+                }
+                Destination.RegisterTransaction -> NavEntry(destination) {
+                    RegisterTransactionRouteContent(navigator)
+                }
+                Destination.History -> NavEntry(destination) {
+                    HistoryRouteContent(navigator)
                 }
             }
         }
@@ -185,6 +197,12 @@ private fun DashboardRouteContent(navigator: Navigator) {
                 DashboardEffect.NavigateToReport -> {
                     navigator.navigateTo(Destination.Report)
                 }
+                DashboardEffect.NavigateToRegisterTransaction -> {
+                    navigator.navigateTo(Destination.RegisterTransaction)
+                }
+                DashboardEffect.NavigateToHistory -> {
+                    navigator.navigateTo(Destination.History)
+                }
             }
         }
     }
@@ -212,6 +230,53 @@ private fun ReportRouteContent(navigator: Navigator) {
     }
 
     ReportScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun RegisterTransactionRouteContent(navigator: Navigator) {
+    val viewModel: RegisterTransactionViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                RegisterTransactionEffect.NavigateBack -> {
+                    navigator.goBack()
+                }
+                RegisterTransactionEffect.ShowSuccessMessage -> {
+                    // Simple toast or message handled natively/implicitly
+                }
+            }
+        }
+    }
+
+    RegisterTransactionScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun HistoryRouteContent(navigator: Navigator) {
+    val viewModel: HistoryViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                HistoryEffect.NavigateBack -> {
+                    navigator.goBack()
+                }
+            }
+        }
+    }
+
+    HistoryScreen(
         state = state,
         onEvent = viewModel::onEvent,
         modifier = Modifier.fillMaxSize()

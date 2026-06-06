@@ -45,6 +45,16 @@ class DashboardViewModel @Inject constructor(
                     _effect.emit(DashboardEffect.NavigateToReport)
                 }
             }
+            DashboardEvent.OnAddTransactionClicked -> {
+                viewModelScope.launch {
+                    _effect.emit(DashboardEffect.NavigateToRegisterTransaction)
+                }
+            }
+            DashboardEvent.OnViewHistoryClicked -> {
+                viewModelScope.launch {
+                    _effect.emit(DashboardEffect.NavigateToHistory)
+                }
+            }
         }
     }
 

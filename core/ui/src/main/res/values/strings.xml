@@ -68,4 +68,25 @@
     <string name="report_title">Relatório de Gastos</string>
     <string name="report_total_expenses">Total de Despesas</string>
     <string name="report_btn_back">Voltar</string>
+
+    <!-- Transactions / History Screens -->
+    <string name="transactions_title">Registrar Transação</string>
+    <string name="transactions_amount_label">Valor</string>
+    <string name="transactions_amount_placeholder">0,00</string>
+    <string name="transactions_category_label">Categoria</string>
+    <string name="transactions_category_placeholder">Selecione uma categoria</string>
+    <string name="transactions_description_label">Descrição</string>
+    <string name="transactions_description_placeholder">Ex: Compras do mês</string>
+    <string name="transactions_date_label">Data</string>
+    <string name="transactions_btn_save">Salvar Transação</string>
+    <string name="transactions_error_amount">Valor deve ser maior que zero</string>
+    <string name="transactions_error_category">Selecione uma categoria válida</string>
+    <string name="transactions_success_save">Transação salva com sucesso!</string>
+    <string name="history_title">Histórico de Transações</string>
+    <string name="history_empty">Nenhuma transação encontrada</string>
+    <string name="history_filter_all">Todas</string>
+    <string name="history_filter_income">Receitas</string>
+    <string name="history_filter_expense">Despesas</string>
+    <string name="history_btn_back">Voltar</string>
 </resources>
+
