@@ -88,5 +88,13 @@
     <string name="history_filter_income">Receitas</string>
     <string name="history_filter_expense">Despesas</string>
     <string name="history_btn_back">Voltar</string>
+
+    <!-- Empty State / Welcome Screen -->
+    <string name="empty_state_welcome_title">Tudo pronto para começar?</string>
+    <string name="empty_state_welcome_desc">O primeiro passo para uma vida financeira saudável é ter clareza. Defina seus limites mensais e acompanhe o crescimento do patrimônio da sua família em tempo real.</string>
+    <string name="empty_state_welcome_btn_configure">Configurar meu Orçamento</string>
+    <string name="empty_state_welcome_btn_how_it_works">Ver como funciona</string>
+    <string name="empty_state_welcome_tip_title">Dica de Especialista</string>
+    <string name="empty_state_welcome_tip_desc">Famílias que definem orçamentos juntas economizam, em média, 20% a mais no primeiro ano.</string>
 </resources>
 

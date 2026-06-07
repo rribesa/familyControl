@@ -27,3 +27,8 @@ Maintain and evolve the Family Budget Control application.
 ## Acceptance Criteria
 - Pixel-perfect to Stitch (https://stitch.withgoogle.com/projects/16629036793824138364).
 - Offline-first logic (Unique UUID per transaction).
+
+## Data Persistence & Backend Rules
+- **Firebase/Firestore:** All schema definitions (collections, document structure) must be managed via Firebase MCP.
+- **Rules:** Firestore security rules must be defined to ensure only authenticated family members can read/write data.
+- **Initialization:** The application must verify the existence of required collections on startup. If missing, use Firebase MCP to initialize the base schema.

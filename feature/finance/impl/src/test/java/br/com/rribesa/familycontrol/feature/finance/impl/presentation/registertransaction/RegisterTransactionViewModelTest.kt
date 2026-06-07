@@ -96,6 +96,9 @@ class RegisterTransactionViewModelTest {
 
         coVerify(exactly = 1) { addTransactionUseCase(any()) }
         assertTrue(viewModel.state.value.success)
+        assertEquals("", viewModel.state.value.amount)
+        assertEquals("", viewModel.state.value.category)
+        assertEquals("", viewModel.state.value.description)
         assertTrue(effects.contains(RegisterTransactionEffect.ShowSuccessMessage))
         assertTrue(effects.contains(RegisterTransactionEffect.NavigateBack))
 

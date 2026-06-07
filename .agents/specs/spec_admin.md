@@ -4,12 +4,12 @@
 - Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
 
 ## Domain Layer
-- Entities: `FamilyMember`, `Role` (Admin/Viewer).
-- UseCases: `InviteMemberUseCase`, `UpdatePermissionsUseCase`, `GetFamilyListUseCase`.
+- Entities: `FamilyMember`, `Role`, `UserProfile` (Preferences, Avatar).
+- UseCases: `UpdateProfileUseCase`, `InviteMemberUseCase`, `UpdatePermissionsUseCase`.
 
 ## Data Layer
 - Repository Interface: `FamilyRepository`.
-- DataSource: Firestore.
+- DataSource: Firestore (Remote backend managed via Firebase MCP).
 
 ## UI/Compose
 - Screens: Profile Admin (SCREEN_38), Permissions (SCREEN_35).

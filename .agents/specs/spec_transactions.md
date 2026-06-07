@@ -6,11 +6,12 @@
 ## Domain Layer
 - Entities: `Transaction` (id: UUID, amount, category, date, desc, userId).
 - UseCases: `AddTransactionUseCase`, `GetTransactionHistoryUseCase`, `SyncTransactionsUseCase`.
+- Logic: Transactions must validate existence of `category` from the user's defined categories.
 
 ## Data Layer
 - Repository Interface: `TransactionRepository` (Offline-first).
 - Sync Logic: Unique UUID generation per transaction. Append-only sync strategy.
-- DataSource: Room (Local), Firestore (Remote).
+- DataSource: Room (Local Database), Firestore (Remote backend and source of truth managed via Firebase MCP).
 
 ## UI/Compose
 - Screens: Register Transaction (SCREEN_53), History (SCREEN_54).

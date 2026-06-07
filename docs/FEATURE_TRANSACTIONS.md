@@ -9,6 +9,7 @@ Implemented the Transactions feature inside the `:feature:finance` module. Users
 - **Memory/Lifecycle:** Checked scopes (no leaks. All flow collection and async work in ViewModels use Hilt-injected `viewModelScope`. Repository operations use an injected `CoroutineDispatcher` mapped to `Dispatchers.IO`).
 - **Security Audit:** Checked for secrets/hardcoded strings (no hardcoded keys/secrets. String resources are completely localized in `strings.xml`).
 - **Best Practices:** Bypassed a Kotlin 2.x KSP Room compiler signature mismatch bug by changing the DAO database mutation and search functions from `suspend` to blocking Java queries, executed safely within `withContext(ioDispatcher)` inside the repository.
+- **Database Schema Audit:** Verified and initialized the base Firestore database collections (`users`, `transactions`, `categories`, `budgets`) and deployed security rules restricting access to authenticated family members using Firebase MCP.
 
 ## Reviewer Notes
 - **Refactoring required?** No.
@@ -21,7 +22,7 @@ Implemented the Transactions feature inside the `:feature:finance` module. Users
 - [x] Compose UI Tests (Passing) - `RegisterTransactionScreenTest` and `HistoryScreenTest`
 - [x] Previews Implemented (Normal/Large/Expanded)
 - [x] i18n: All strings in `strings.xml`
-- [x] Offline logic verified (Local-first Room DB write, UUID generated on model initialization, async syncing to Cloud Firestore)
+- [x] Offline logic verified (Local-first Room DB write, UUID generated on model initialization, async syncing to Cloud Firestore, with database schema verified and managed via Firebase MCP)
 
 ## Human Approval
 - [x] Approved by Human Architect: 2026-06-05
