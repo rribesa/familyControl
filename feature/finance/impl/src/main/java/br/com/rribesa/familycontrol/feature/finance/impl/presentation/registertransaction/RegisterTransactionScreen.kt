@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -72,6 +73,7 @@ fun RegisterTransactionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .safeDrawingPadding()
                 .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -90,7 +92,15 @@ fun RegisterTransactionScreen(
             Spacer(modifier = Modifier.height(16.dp))
             CategorySelectionGrid(
                 selectedCategory = state.category,
+                categories = state.categoriesList,
                 onCategorySelected = { onEvent(RegisterTransactionEvent.OnCategoryChanged(it)) }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            CustomCategoryInputField(
+                name = state.newCategoryName,
+                onNameChanged = { onEvent(RegisterTransactionEvent.OnNewCategoryNameChanged(it)) },
+                onAddClick = { onEvent(RegisterTransactionEvent.OnAddCustomCategoryClicked) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -179,10 +189,9 @@ private fun TransactionAmountInput(
 @Suppress("MagicNumber")
 private fun CategorySelectionGrid(
     selectedCategory: String,
+    categories: List<String>,
     onCategorySelected: (String) -> Unit
 ) {
-    val categories = listOf("Alimentação", "Moradia", "Transporte", "Lazer", "Salário", "Outros")
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -227,6 +236,39 @@ private fun CategorySelectionGrid(
 }
 
 @Composable
+private fun CustomCategoryInputField(
+    name: String,
+    onNameChanged: (String) -> Unit,
+    onAddClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            value = name,
+            onValueChange = onNameChanged,
+            placeholder = { Text(text = stringResource(id = R.string.transactions_add_category_placeholder)) },
+            singleLine = true,
+            modifier = Modifier.weight(1f),
+            shape = RoundedCornerShape(8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+            )
+        )
+        Button(
+            onClick = onAddClick,
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.height(56.dp)
+        ) {
+            Text(text = stringResource(id = R.string.transactions_add_category_btn))
+        }
+    }
+}
+
+@Composable
 @Suppress("MagicNumber")
 private fun CategoryChip(
     category: String,
@@ -234,9 +276,8 @@ private fun CategoryChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isIncome = category == "Salário"
     val baseColor = if (isSelected) {
-        if (isIncome) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary
+        MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     }

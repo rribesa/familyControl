@@ -3,9 +3,12 @@ package br.com.rribesa.familycontrol.feature.finance.impl.presentation.registert
 import br.com.rribesa.familycontrol.core.ui.R
 import br.com.rribesa.familycontrol.feature.auth.api.domain.entity.User
 import br.com.rribesa.familycontrol.feature.auth.api.domain.repository.AuthRepository
+import br.com.rribesa.familycontrol.feature.finance.api.domain.model.Category
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.AddTransactionUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetCategoriesUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.ManageCategoriesUseCase
+import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,15 +31,30 @@ class RegisterTransactionViewModelTest {
 
     private val addTransactionUseCase: AddTransactionUseCase = mockk(relaxed = true)
     private val authRepository: AuthRepository = mockk(relaxed = true)
+    private val getCategoriesUseCase: GetCategoriesUseCase = mockk(relaxed = true)
+    private val manageCategoriesUseCase: ManageCategoriesUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: RegisterTransactionViewModel
 
+    private val mockCategories = listOf(
+        Category(name = "Alimentação", userId = "user1"),
+        Category(name = "Lazer", userId = "user1")
+    )
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        every { authRepository.getCurrentUser() } returns flowOf(User("user1", "user@test.com", "Test User"))
-        viewModel = RegisterTransactionViewModel(addTransactionUseCase, authRepository)
+        coEvery { authRepository.getCurrentUser() } returns flowOf(
+            User("user1", "user@test.com", "Test User", "Editor")
+        )
+        coEvery { getCategoriesUseCase("user1") } returns flowOf(mockCategories)
+        viewModel = RegisterTransactionViewModel(
+            addTransactionUseCase,
+            authRepository,
+            getCategoriesUseCase,
+            manageCategoriesUseCase
+        )
     }
 
     @After
@@ -45,12 +63,14 @@ class RegisterTransactionViewModelTest {
     }
 
     @Test
-    fun `initial state should be empty`() {
+    fun `initial state should load categories`() {
         val state = viewModel.state.value
         assertEquals("", state.amount)
         assertEquals("", state.category)
         assertEquals("", state.description)
         assertNull(state.errorMessageResId)
+        assertEquals(2, state.categoriesList.size)
+        assertEquals("Alimentação", state.categoriesList[0])
     }
 
     @Test
@@ -103,5 +123,41 @@ class RegisterTransactionViewModelTest {
         assertTrue(effects.contains(RegisterTransactionEffect.NavigateBack))
 
         effectJob.cancel()
+    }
+
+    @Test
+    fun `save transaction with Viewer role should fail`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns flowOf(
+            User("user1", "user@test.com", "Test User", "Viewer")
+        )
+        
+        viewModel.onEvent(RegisterTransactionEvent.OnAmountChanged("250.00"))
+        viewModel.onEvent(RegisterTransactionEvent.OnCategoryChanged("Alimentação"))
+        viewModel.onEvent(RegisterTransactionEvent.OnSaveClicked)
+
+        assertEquals(R.string.error_permission_denied, viewModel.state.value.errorMessageResId)
+        coVerify(exactly = 0) { addTransactionUseCase(any()) }
+    }
+
+    @Test
+    fun `add custom category with Editor role should succeed`() = runTest {
+        viewModel.onEvent(RegisterTransactionEvent.OnNewCategoryNameChanged("Transporte"))
+        viewModel.onEvent(RegisterTransactionEvent.OnAddCustomCategoryClicked)
+
+        coVerify(exactly = 1) { manageCategoriesUseCase(any()) }
+        assertEquals("", viewModel.state.value.newCategoryName)
+    }
+
+    @Test
+    fun `add custom category with Viewer role should fail`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns flowOf(
+            User("user1", "user@test.com", "Test User", "Viewer")
+        )
+        
+        viewModel.onEvent(RegisterTransactionEvent.OnNewCategoryNameChanged("Transporte"))
+        viewModel.onEvent(RegisterTransactionEvent.OnAddCustomCategoryClicked)
+
+        coVerify(exactly = 0) { manageCategoriesUseCase(any()) }
+        assertEquals(R.string.error_permission_denied, viewModel.state.value.errorMessageResId)
     }
 }

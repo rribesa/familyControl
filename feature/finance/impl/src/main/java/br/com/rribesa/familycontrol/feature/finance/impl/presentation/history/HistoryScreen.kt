@@ -3,7 +3,6 @@ package br.com.rribesa.familycontrol.feature.finance.impl.presentation.history
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,6 +67,7 @@ fun HistoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .safeDrawingPadding()
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -79,10 +80,6 @@ fun HistoryScreen(
 
             ErrorMessage(errorMessageResId = state.errorMessageResId)
 
-            HistoryFilterRow(
-                selectedFilter = state.filter,
-                onFilterChanged = { onEvent(HistoryEvent.OnFilterChanged(it)) }
-            )
             Spacer(modifier = Modifier.height(16.dp))
 
             if (state.isLoading && state.transactions.isEmpty()) {
@@ -163,66 +160,7 @@ private fun ErrorMessage(errorMessageResId: Int?) {
     }
 }
 
-@Composable
-private fun HistoryFilterRow(
-    selectedFilter: HistoryFilter,
-    onFilterChanged: (HistoryFilter) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        FilterChipItem(
-            text = stringResource(id = R.string.history_filter_all),
-            isSelected = selectedFilter == HistoryFilter.ALL,
-            onClick = { onFilterChanged(HistoryFilter.ALL) },
-            modifier = Modifier.weight(1f)
-        )
-        FilterChipItem(
-            text = stringResource(id = R.string.history_filter_income),
-            isSelected = selectedFilter == HistoryFilter.INCOME,
-            onClick = { onFilterChanged(HistoryFilter.INCOME) },
-            modifier = Modifier.weight(1f)
-        )
-        FilterChipItem(
-            text = stringResource(id = R.string.history_filter_expense),
-            isSelected = selectedFilter == HistoryFilter.EXPENSE,
-            onClick = { onFilterChanged(HistoryFilter.EXPENSE) },
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
 
-@Composable
-@Suppress("MagicNumber")
-private fun FilterChipItem(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val containerColor = if (isSelected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    }
-    val contentColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
-
-    Box(
-        modifier = modifier
-            .height(36.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .background(containerColor)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = contentColor
-        )
-    }
-}
 
 @Composable
 private fun HistoryLoadingIndicator(modifier: Modifier = Modifier) {

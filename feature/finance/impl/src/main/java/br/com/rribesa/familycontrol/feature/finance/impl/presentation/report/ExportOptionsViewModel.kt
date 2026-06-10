@@ -8,6 +8,7 @@ import br.com.rribesa.familycontrol.feature.auth.api.domain.repository.AuthRepos
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetMonthlyReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,71 +22,53 @@ import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-@Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException", "MagicNumber")
-class ReportViewModel @Inject constructor(
+@Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException", "SwallowedException", "MagicNumber")
+class ExportOptionsViewModel @Inject constructor(
     private val getMonthlyReportUseCase: GetMonthlyReportUseCase,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(ReportState())
-    val state: StateFlow<ReportState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(ExportOptionsState())
+    val state: StateFlow<ExportOptionsState> = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<ReportEffect>()
-    val effect: SharedFlow<ReportEffect> = _effect.asSharedFlow()
+    private val _effect = MutableSharedFlow<ExportOptionsEffect>()
+    val effect: SharedFlow<ExportOptionsEffect> = _effect.asSharedFlow()
 
     private var collectJob: Job? = null
 
     init {
-        val cal = Calendar.getInstance()
-        val currentYear = cal.get(Calendar.YEAR)
-        val currentMonth = cal.get(Calendar.MONTH) // 0-11
-
-        val months = mutableListOf<Pair<Int, Int>>()
-        // Generate a 4-month window (e.g. 2 months back, current, 1 month forward to simulate carousel options)
-        for (i in -2..1) {
-            val tempCal = Calendar.getInstance()
-            tempCal.set(Calendar.YEAR, currentYear)
-            tempCal.set(Calendar.MONTH, currentMonth)
-            tempCal.add(Calendar.MONTH, i)
-            months.add(Pair(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH)))
-        }
-
-        _state.update {
-            it.copy(
-                availableMonths = months,
-                selectedYear = currentYear,
-                selectedMonth = currentMonth
-            )
-        }
-
-        loadReportStats(currentYear, currentMonth)
+        loadReportStatsForPreview()
     }
 
-    fun onEvent(event: ReportEvent) {
+    fun onEvent(event: ExportOptionsEvent) {
         when (event) {
-            ReportEvent.OnBackClicked -> {
+            ExportOptionsEvent.OnBackClicked -> {
                 viewModelScope.launch {
-                    _effect.emit(ReportEffect.NavigateBack)
+                    _effect.emit(ExportOptionsEffect.NavigateBack)
                 }
             }
-            ReportEvent.OnExportClicked -> {
-                viewModelScope.launch {
-                    _effect.emit(ReportEffect.NavigateToExportOptions)
+            is ExportOptionsEvent.OnPeriodSelected -> {
+                _state.update { it.copy(selectedPeriod = event.period) }
+                // Optionally reload preview based on selected period (Mês anterior vs atual)
+                val cal = Calendar.getInstance()
+                if (event.period == "previous") {
+                    cal.add(Calendar.MONTH, -1)
                 }
+                loadReportStatsForPreview(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH))
             }
-            is ReportEvent.OnMonthSelected -> {
-                _state.update {
-                    it.copy(
-                        selectedYear = event.year,
-                        selectedMonth = event.month
-                    )
-                }
-                loadReportStats(event.year, event.month)
+            is ExportOptionsEvent.OnFormatSelected -> {
+                _state.update { it.copy(selectedFormat = event.format) }
+            }
+            ExportOptionsEvent.OnGenerateClicked -> {
+                generateReport()
             }
         }
     }
 
-    private fun loadReportStats(year: Int, month: Int) {
+    private fun loadReportStatsForPreview(
+        year: Int = Calendar.getInstance().get(Calendar.YEAR),
+        month: Int = Calendar.getInstance().get(Calendar.MONTH)
+    ) {
         collectJob?.cancel()
         _state.update { it.copy(isLoading = true, errorMessageResId = null) }
         collectJob = viewModelScope.launch {
@@ -100,7 +83,6 @@ class ReportViewModel @Inject constructor(
                     }
                     return@launch
                 }
-
                 getMonthlyReportUseCase(user.id, year, month).collect { report ->
                     _state.update {
                         it.copy(
@@ -111,10 +93,34 @@ class ReportViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) throw e
-                Log.e("ReportViewModel", "Error loading report stats", e)
+                Log.e("ExportOptionsViewModel", "Error loading preview stats", e)
                 _state.update {
                     it.copy(
                         isLoading = false,
+                        errorMessageResId = R.string.error_generic
+                    )
+                }
+            }
+        }
+    }
+
+    private fun generateReport() {
+        if (_state.value.isExporting) return
+
+        _state.update { it.copy(isExporting = true, exportSuccess = false) }
+        viewModelScope.launch {
+            try {
+                // Simulate report generation delay (1.5 seconds)
+                delay(1500)
+                _state.update { it.copy(isExporting = false, exportSuccess = true) }
+
+                // Auto reset success state after 2 seconds
+                delay(2000)
+                _state.update { it.copy(exportSuccess = false) }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        isExporting = false,
                         errorMessageResId = R.string.error_generic
                     )
                 }

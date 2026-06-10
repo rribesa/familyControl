@@ -7,5 +7,7 @@ data class RegisterTransactionState(
     val date: Long = System.currentTimeMillis(),
     val isLoading: Boolean = false,
     val errorMessageResId: Int? = null,
-    val success: Boolean = false
+    val success: Boolean = false,
+    val newCategoryName: String = "",
+    val categoriesList: List<String> = emptyList()
 )

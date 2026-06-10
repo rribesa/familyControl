@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -27,8 +28,13 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.FamilyRestroom
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.isSystemInDarkTheme
+import br.com.rribesa.familycontrol.core.ui.theme.SurfaceContainerLow
+import br.com.rribesa.familycontrol.core.ui.theme.DarkSurfaceContainerLow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -69,6 +75,7 @@ fun DashboardScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .safeDrawingPadding()
     ) {
         DashboardBackgroundBlur(modifier = Modifier.align(Alignment.TopEnd))
         Column(
@@ -91,10 +98,7 @@ fun DashboardScreen(
             }
             if (state.isLoading && state.budgetStats.budgetLimit == 0.0) {
                 DashboardLoadingContainer()
-            } else if (state.budgetStats.totalIncome == 0.0 &&
-                state.budgetStats.totalExpenses == 0.0 &&
-                state.categorySummaries.isEmpty()
-            ) {
+            } else if (state.budgetStats.totalExpenses == 0.0) {
                 DashboardWelcomeEmptyState(
                     onConfigureClick = { onEvent(DashboardEvent.OnAddTransactionClicked) }
                 )
@@ -154,11 +158,22 @@ private fun DashboardHeader(isLoading: Boolean, onRefresh: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = stringResource(id = R.string.dashboard_title),
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.FamilyRestroom,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(28.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
         IconButton(onClick = onRefresh, enabled = !isLoading) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp))
@@ -180,14 +195,6 @@ private fun MetricsGrid(stats: BudgetStats) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val incomeVal = String.format(Locale.getDefault(), "%.2f", stats.totalIncome)
-        MetricCard(
-            label = stringResource(id = R.string.dashboard_total_income),
-            value = "${stats.currency} $incomeVal",
-            valueColor = Color(0xFF2E7D32),
-            modifier = Modifier.weight(1f)
-        )
-
         val expenseVal = String.format(Locale.getDefault(), "%.2f", stats.totalExpenses)
         MetricCard(
             label = stringResource(id = R.string.dashboard_total_expenses),
@@ -195,11 +202,15 @@ private fun MetricsGrid(stats: BudgetStats) {
             valueColor = MaterialTheme.colorScheme.error,
             modifier = Modifier.weight(1f)
         )
+
+        val limitVal = String.format(Locale.getDefault(), "%.2f", stats.budgetLimit)
+        MetricCard(
+            label = stringResource(id = R.string.dashboard_limit),
+            value = "${stats.currency} $limitVal",
+            valueColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.weight(1f)
+        )
     }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    BalanceCard(stats = stats)
 }
 
 @Composable
@@ -224,29 +235,6 @@ private fun MetricCard(
                 text = value,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = valueColor
-            )
-        }
-    }
-}
-
-@Composable
-private fun BalanceCard(stats: BudgetStats) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(id = R.string.dashboard_balance),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-            val balanceVal = String.format(Locale.getDefault(), "%.2f", stats.balance)
-            Text(
-                text = "${stats.currency} $balanceVal",
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }
@@ -485,15 +473,20 @@ private fun DashboardWelcomeIllustration(modifier: Modifier = Modifier) {
         "IF8otlS2NQp4s-u2vJwYev7wLX5vu4jd"
     Box(
         modifier = modifier
-            .size(240.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)),
+            .size(280.dp),
         contentAlignment = Alignment.Center
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(40.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+        )
         AsyncImage(
             model = illustrationUrl,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier.size(240.dp)
         )
     }
 }
@@ -509,7 +502,7 @@ private fun DashboardWelcomeCta(
     ) {
         Button(
             onClick = onConfigureClick,
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
@@ -530,13 +523,13 @@ private fun DashboardWelcomeCta(
 
         Button(
             onClick = {},
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.primary
             ),
-            border = androidx.compose.foundation.BorderStroke(
-                width = 1.dp,
+            border = BorderStroke(
+                width = 2.dp,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
             ),
             modifier = Modifier.fillMaxWidth().height(56.dp)
@@ -557,11 +550,14 @@ private fun DashboardWelcomeCta(
 
 @Composable
 private fun DashboardWelcomeTip(modifier: Modifier = Modifier) {
+    val isDark = isSystemInDarkTheme()
+    val containerColor = if (isDark) DarkSurfaceContainerLow else SurfaceContainerLow
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            containerColor = containerColor
         ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
@@ -629,7 +625,7 @@ private fun DashboardWelcomeEmptyState(
 
         Text(
             text = stringResource(id = R.string.empty_state_welcome_desc),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
@@ -639,5 +635,47 @@ private fun DashboardWelcomeEmptyState(
         DashboardWelcomeCta(onConfigureClick = onConfigureClick)
         Spacer(modifier = Modifier.height(24.dp))
         DashboardWelcomeTip()
+    }
+}
+
+@Preview(name = "Empty State - Normal Device (Phone)", showBackground = true, device = Devices.PHONE)
+@Composable
+@Suppress("MagicNumber")
+internal fun DashboardWelcomeEmptyStatePreviewNormal() {
+    FamilyControlTheme {
+        DashboardScreen(
+            state = DashboardState(
+                budgetStats = BudgetStats(0.0, 0.0, 4000.0)
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Empty State - Large Device (Tablet)", showBackground = true, device = Devices.TABLET)
+@Composable
+@Suppress("MagicNumber")
+internal fun DashboardWelcomeEmptyStatePreviewLarge() {
+    FamilyControlTheme {
+        DashboardScreen(
+            state = DashboardState(
+                budgetStats = BudgetStats(0.0, 0.0, 4000.0)
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Empty State - Expanded Device (Landscape)", showBackground = true, widthDp = 1024, heightDp = 600)
+@Composable
+@Suppress("MagicNumber")
+internal fun DashboardWelcomeEmptyStatePreviewExpanded() {
+    FamilyControlTheme {
+        DashboardScreen(
+            state = DashboardState(
+                budgetStats = BudgetStats(0.0, 0.0, 4000.0)
+            ),
+            onEvent = {}
+        )
     }
 }

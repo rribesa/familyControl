@@ -1,9 +1,13 @@
 package br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard
 
+import br.com.rribesa.familycontrol.core.ui.R
+import br.com.rribesa.familycontrol.feature.auth.api.domain.entity.User
+import br.com.rribesa.familycontrol.feature.auth.api.domain.repository.AuthRepository
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.BudgetStats
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.HealthStatus
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.DashboardStats
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetDashboardStatsUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.SyncTransactionsUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +28,8 @@ import org.junit.Test
 class DashboardViewModelTest {
 
     private val getDashboardStatsUseCase: GetDashboardStatsUseCase = mockk()
+    private val syncTransactionsUseCase: SyncTransactionsUseCase = mockk(relaxed = true)
+    private val authRepository: AuthRepository = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: DashboardViewModel
@@ -37,7 +43,8 @@ class DashboardViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         coEvery { getDashboardStatsUseCase() } returns flowOf(defaultStats)
-        viewModel = DashboardViewModel(getDashboardStatsUseCase)
+        coEvery { authRepository.getCurrentUser() } returns flowOf(User("1", "test@test.com", "Test User", "Editor"))
+        viewModel = DashboardViewModel(getDashboardStatsUseCase, syncTransactionsUseCase, authRepository)
     }
 
     @After
@@ -81,5 +88,36 @@ class DashboardViewModelTest {
         // Critical status (> 120%)
         val criticalStats = BudgetStats(totalIncome = 1000.0, totalExpenses = 121.0, budgetLimit = 100.0)
         assertEquals(HealthStatus.CRITICAL, criticalStats.healthStatus)
+    }
+
+    @Test
+    fun onAddTransactionClicked_withEditorRole_navigatesToRegister() = runTest {
+        val effects = mutableListOf<DashboardEffect>()
+        val collectJob = launch(testDispatcher) {
+            viewModel.effect.collect { effects.add(it) }
+        }
+
+        viewModel.onEvent(DashboardEvent.OnAddTransactionClicked)
+
+        assertEquals(1, effects.size)
+        assertEquals(DashboardEffect.NavigateToRegisterTransaction, effects[0])
+        collectJob.cancel()
+    }
+
+    @Test
+    fun onAddTransactionClicked_withViewerRole_showsPermissionDeniedError() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns flowOf(
+            User("1", "test@test.com", "Test User", "Viewer")
+        )
+        val effects = mutableListOf<DashboardEffect>()
+        val collectJob = launch(testDispatcher) {
+            viewModel.effect.collect { effects.add(it) }
+        }
+
+        viewModel.onEvent(DashboardEvent.OnAddTransactionClicked)
+
+        assertEquals(0, effects.size)
+        assertEquals(R.string.error_permission_denied, viewModel.state.value.errorMessageResId)
+        collectJob.cancel()
     }
 }

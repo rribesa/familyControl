@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package br.com.rribesa.familycontrol.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
@@ -75,3 +76,42 @@ val Error = Color(HEX_ERROR)
 val OnError = Color(HEX_ON_ERROR)
 val ErrorContainer = Color(HEX_ERROR_CONTAINER)
 val OnErrorContainer = Color(HEX_ON_ERROR_CONTAINER)
+
+// Dark Theme Colors
+val DarkPrimary = Color(0xFFB1C5FF)
+val DarkOnPrimary = Color(0xFF002C6F)
+val DarkPrimaryContainer = Color(0xFF0043A5)
+val DarkOnPrimaryContainer = Color(0xFFDCE2FF)
+
+val DarkSecondary = Color(0xFF5FDCFF)
+val DarkOnSecondary = Color(0xFF003541)
+val DarkSecondaryContainer = Color(0xFF004D5C)
+val DarkOnSecondaryContainer = Color(0xFFB2EBFF)
+
+val DarkTertiary = Color(0xFFFFB59F)
+val DarkOnTertiary = Color(0xFF561600)
+val DarkTertiaryContainer = Color(0xFF7B2600)
+val DarkOnTertiaryContainer = Color(0xFFFFDAD0)
+
+val DarkBackground = Color(0xFF111318)
+val DarkOnBackground = Color(0xFFE2E2E9)
+
+val DarkSurface = Color(0xFF111318)
+val DarkOnSurface = Color(0xFFE2E2E9)
+val DarkSurfaceVariant = Color(0xFF434753)
+val DarkOnSurfaceVariant = Color(0xFFC3C6D5)
+
+val DarkSurfaceContainerHighest = Color(0xFF22262F)
+val DarkSurfaceContainerHigh = Color(0xFF1E212A)
+val DarkSurfaceContainer = Color(0xFF1A1D24)
+val DarkSurfaceContainerLow = Color(0xFF16181E)
+val DarkSurfaceContainerLowest = Color(0xFF0C0E12)
+
+val DarkOutline = Color(0xFF8D909F)
+val DarkOutlineVariant = Color(0xFF434753)
+
+val DarkError = Color(0xFFFFB4AB)
+val DarkOnError = Color(0xFF690005)
+val DarkErrorContainer = Color(0xFF93000A)
+val DarkOnErrorContainer = Color(0xFFFFDAD6)
+

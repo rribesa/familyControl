@@ -32,12 +32,16 @@ import br.com.rribesa.familycontrol.feature.finance.impl.presentation.dashboard.
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportEffect
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportScreen
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ReportViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ExportOptionsScreen
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ExportOptionsViewModel
+import br.com.rribesa.familycontrol.feature.finance.impl.presentation.report.ExportOptionsEffect
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionEffect
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionScreen
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.registertransaction.RegisterTransactionViewModel
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryEffect
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryScreen
 import br.com.rribesa.familycontrol.feature.finance.impl.presentation.history.HistoryViewModel
+import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -48,6 +52,7 @@ class MainActivity : ComponentActivity() {
     lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             FamilyControlTheme {
@@ -92,6 +97,9 @@ private fun AppNavDisplay(navigator: Navigator) {
                 }
                 Destination.History -> NavEntry(destination) {
                     HistoryRouteContent(navigator)
+                }
+                Destination.ExportOptions -> NavEntry(destination) {
+                    ExportOptionsRouteContent(navigator)
                 }
             }
         }
@@ -225,6 +233,9 @@ private fun ReportRouteContent(navigator: Navigator) {
                 ReportEffect.NavigateBack -> {
                     navigator.goBack()
                 }
+                ReportEffect.NavigateToExportOptions -> {
+                    navigator.navigateTo(Destination.ExportOptions)
+                }
             }
         }
     }
@@ -277,6 +288,28 @@ private fun HistoryRouteContent(navigator: Navigator) {
     }
 
     HistoryScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun ExportOptionsRouteContent(navigator: Navigator) {
+    val viewModel: ExportOptionsViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                ExportOptionsEffect.NavigateBack -> {
+                    navigator.goBack()
+                }
+            }
+        }
+    }
+
+    ExportOptionsScreen(
         state = state,
         onEvent = viewModel::onEvent,
         modifier = Modifier.fillMaxSize()
