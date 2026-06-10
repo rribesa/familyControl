@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">Controle da Família</string>
     
+    <!-- Brand Logo (Stitch) -->
+    <string name="brand_logo_url" translatable="false">https://lh3.googleusercontent.com/aida/AP1WRLtVtSXIZGI-Uy-WUz7CLDZAcygAID2cfvquz7Th9Zodj-1DjJaP6iDfj4vgKO-b-vz4kcnjPD6XrqfY1x7gjeHk7krD6JIjG-JtStvAfb3cPS_o3EM58Iq3atCPE8phyWedaFlb7xgAhTwpx8HJaKtWpXNNHh3vH6nMMp83PUhDN2G1aJEPgbJVdOYQxHfNqqyLskxlpUBMUcpYw9W-PbiBs39h6OP0DgpD46aGjQdtqG5HzJuKJfBMz5Bu</string>
+    <string name="brand_logo_content_description">Logo Controle da Família</string>
+
     <!-- Splash Screen -->
     <string name="splash_title">Controle da Família</string>
     <string name="splash_subtitle">Organize as finanças do seu lar com clareza, transparência e segurança.</string>
@@ -99,5 +103,41 @@
     <string name="error_permission_denied">Permissão negada. Apenas editores podem fazer alterações.</string>
     <string name="transactions_add_category_btn">Adicionar Categoria</string>
     <string name="transactions_add_category_placeholder">Nova Categoria</string>
+
+    <!-- Monthly Reports & Export Screens -->
+    <string name="report_monthly_title">Relatórios Mensais</string>
+    <string name="report_total_gasto_month">Gasto Total (%1$s)</string>
+    <string name="report_remaining_budget">Orçamento Restante</string>
+    <string name="report_budget_percent_used">%1$d%% do orçamento utilizado</string>
+    <string name="report_budget_goal">Meta: R$ %1$s</string>
+    <string name="report_budget_status_within">Você está dentro do limite esperado para este mês.</string>
+    <string name="report_budget_status_warning">Atenção: Você está próximo ao limite do seu orçamento.</string>
+    <string name="report_budget_status_critical">Alerta: Você ultrapassou o limite do seu orçamento!</string>
+    <string name="report_history_6_months">Histórico 6 Meses</string>
+    <string name="report_category_breakdown">Gastos por Categoria</string>
+    <string name="report_top_spenders">Maiores Gastadores</string>
+    <string name="report_export_monthly_btn">Exportar Relatório Mensal</string>
+    
+    <string name="export_title">Exportar Relatórios</string>
+    <string name="export_subtitle">Selecione os parâmetros para gerar sua análise financeira detalhada.</string>
+    <string name="export_section_period">Período de Referência</string>
+    <string name="export_period_current">Mês Atual</string>
+    <string name="export_period_previous">Mês Anterior</string>
+    <string name="export_period_custom">Personalizado</string>
+    <string name="export_section_format">Formato do Arquivo</string>
+    <string name="export_format_pdf_title">PDF (Recomendado)</string>
+    <string name="export_format_pdf_desc">Ideal para impressão e visualização</string>
+    <string name="export_format_excel_title">Excel (.xlsx)</string>
+    <string name="export_format_excel_desc">Edite os dados em planilhas</string>
+    <string name="export_format_csv_title">CSV</string>
+    <string name="export_format_csv_desc">Formato leve para outros apps</string>
+    <string name="export_section_preview">Resumo do que será exportado:</string>
+    <string name="export_preview_total_spent">Total Gastos</string>
+    <string name="export_preview_transactions">Transações</string>
+    <string name="export_preview_top_category">Categoria Principal</string>
+    <string name="export_btn_generate">Gerar Relatório</string>
+    <string name="export_processing">Processando...</string>
+    <string name="export_success">Sucesso!</string>
+    <string name="export_download_tip">O arquivo será salvo automaticamente na sua pasta de downloads.</string>
 </resources>
 

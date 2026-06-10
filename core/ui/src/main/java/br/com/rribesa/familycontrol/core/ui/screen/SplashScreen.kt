@@ -10,7 +10,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -40,8 +40,8 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.rribesa.familycontrol.core.ui.R
 import br.com.rribesa.familycontrol.core.ui.theme.FamilyControlTheme
+import coil.compose.AsyncImage
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -133,9 +134,11 @@ fun SplashScreen(
         contentAlignment = Alignment.Center
     ) {
         SplashBackground()
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .safeDrawingPadding()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -219,21 +222,23 @@ private fun BoxScope.SplashBackground() {
 
 @Composable
 private fun SplashLogo(alphaVal: Float, translationYVal: Float) {
-    Box(
+    AsyncImage(
+        model = stringResource(id = R.string.brand_logo_url),
+        contentDescription = stringResource(id = R.string.brand_logo_content_description),
         modifier = Modifier
             .graphicsLayer {
                 alpha = alphaVal
                 translationY = translationYVal
             }
-            .size(200.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.splash_logo),
-            contentDescription = stringResource(id = R.string.splash_title),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Fit
-        )
-    }
+            .size(192.dp)
+            .shadow(
+                elevation = 12.dp,
+                shape = RoundedCornerShape(12.dp),
+                ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+            )
+            .clip(RoundedCornerShape(12.dp))
+    )
 }
 
 @Composable
