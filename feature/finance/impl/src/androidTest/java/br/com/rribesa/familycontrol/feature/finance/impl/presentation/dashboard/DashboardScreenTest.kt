@@ -31,12 +31,36 @@ class DashboardScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Visão Geral").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Controle da Família").assertIsDisplayed()
         composeTestRule.onNodeWithText("Receitas").assertIsDisplayed()
         composeTestRule.onNodeWithText("Despesas").assertIsDisplayed()
         composeTestRule.onNodeWithText("Saldo").assertIsDisplayed()
         composeTestRule.onNodeWithText("Limite do Orçamento").assertIsDisplayed()
         composeTestRule.onNodeWithText("Ver Relatório Completo").assertIsDisplayed()
+    }
+
+    @Test
+    fun dashboardScreen_displaysWelcomeEmptyState_whenTotalExpensesIsZero() {
+        val state = DashboardState(
+            budgetStats = BudgetStats(
+                totalIncome = 0.0,
+                totalExpenses = 0.0,
+                budgetLimit = 4000.0
+            )
+        )
+        composeTestRule.setContent {
+            FamilyControlTheme {
+                DashboardScreen(
+                    state = state,
+                    onEvent = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Tudo pronto para começar?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Configurar meu Orçamento").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Ver como funciona").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Dica de Especialista").assertIsDisplayed()
     }
 
     @Test

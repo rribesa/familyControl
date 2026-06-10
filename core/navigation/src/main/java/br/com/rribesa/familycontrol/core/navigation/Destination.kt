@@ -9,5 +9,6 @@ sealed interface Destination {
     data object Report : Destination
     data object RegisterTransaction : Destination
     data object History : Destination
+    data object ExportOptions : Destination
 }
 

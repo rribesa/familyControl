@@ -1,5 +1,8 @@
 # Feature Spec: Reporting
 
+## Stitch Reference
+- Project Link: [Stitch Project](https://stitch.withgoogle.com/projects/16629036793824138364)
+
 ## Domain Layer
 - **UseCases:** `GetMonthlyReportUseCase`, `AggregateExpensesByCategoryUseCase`.
 - **Logic:** Aggregation performed in UseCase/Repository to keep ViewModel lean.
