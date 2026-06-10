@@ -8,14 +8,19 @@ import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetDashbo
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.AddTransactionUseCase
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetTransactionHistoryUseCase
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.SyncTransactionsUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.ManageCategoriesUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetCategoriesUseCase
 import br.com.rribesa.familycontrol.feature.finance.impl.data.database.FinanceDatabase
 import br.com.rribesa.familycontrol.feature.finance.impl.data.database.TransactionDao
+import br.com.rribesa.familycontrol.feature.finance.impl.data.database.CategoryDao
 import br.com.rribesa.familycontrol.feature.finance.impl.data.repository.FinanceRepositoryImpl
 import br.com.rribesa.familycontrol.feature.finance.impl.data.repository.TransactionRepositoryImpl
 import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.GetDashboardStats
 import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.AddTransaction
 import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.GetTransactionHistory
 import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.SyncTransactions
+import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.ManageCategories
+import br.com.rribesa.familycontrol.feature.finance.impl.domain.usecase.GetCategories
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -66,6 +71,18 @@ abstract class FinanceModule {
         impl: SyncTransactions
     ): SyncTransactionsUseCase
 
+    @Binds
+    @Singleton
+    abstract fun bindManageCategoriesUseCase(
+        impl: ManageCategories
+    ): ManageCategoriesUseCase
+
+    @Binds
+    @Singleton
+    abstract fun bindGetCategoriesUseCase(
+        impl: GetCategories
+    ): GetCategoriesUseCase
+
     companion object {
         @Provides
         @Singleton
@@ -85,6 +102,14 @@ abstract class FinanceModule {
             database: FinanceDatabase
         ): TransactionDao {
             return database.transactionDao()
+        }
+
+        @Provides
+        @Singleton
+        fun provideCategoryDao(
+            database: FinanceDatabase
+        ): CategoryDao {
+            return database.categoryDao()
         }
 
         @Provides

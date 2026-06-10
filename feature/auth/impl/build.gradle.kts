@@ -73,6 +73,7 @@ dependencies {
     // Firebase Auth / SDK (Concrete Datasource)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
     // Credentials & Google Identity
     implementation(libs.androidx.credentials)

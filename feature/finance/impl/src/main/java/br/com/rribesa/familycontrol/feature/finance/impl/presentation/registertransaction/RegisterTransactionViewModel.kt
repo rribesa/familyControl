@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import br.com.rribesa.familycontrol.core.ui.R
 import br.com.rribesa.familycontrol.feature.auth.api.domain.repository.AuthRepository
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.Transaction
+import br.com.rribesa.familycontrol.feature.finance.api.domain.model.Category
 import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.AddTransactionUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.GetCategoriesUseCase
+import br.com.rribesa.familycontrol.feature.finance.api.domain.usecase.ManageCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +26,9 @@ import javax.inject.Inject
 @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
 class RegisterTransactionViewModel @Inject constructor(
     private val addTransactionUseCase: AddTransactionUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val manageCategoriesUseCase: ManageCategoriesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterTransactionState())
@@ -31,6 +36,28 @@ class RegisterTransactionViewModel @Inject constructor(
 
     private val _effect = MutableSharedFlow<RegisterTransactionEffect>()
     val effect: SharedFlow<RegisterTransactionEffect> = _effect.asSharedFlow()
+
+    init {
+        loadCategories()
+    }
+
+    private fun loadCategories() {
+        viewModelScope.launch {
+            val user = authRepository.getCurrentUser().firstOrNull()
+            user?.let { u ->
+                getCategoriesUseCase(u.id).collect { categories ->
+                    if (categories.isEmpty()) {
+                        val defaults = listOf("Alimentação", "Moradia", "Transporte", "Lazer", "Outros")
+                        defaults.forEach { name ->
+                            manageCategoriesUseCase(Category(name = name, userId = u.id))
+                        }
+                    } else {
+                        _state.update { it.copy(categoriesList = categories.map { c -> c.name }) }
+                    }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: RegisterTransactionEvent) {
         when (event) {
@@ -46,6 +73,12 @@ class RegisterTransactionViewModel @Inject constructor(
             is RegisterTransactionEvent.OnDateChanged -> {
                 _state.update { it.copy(date = event.date) }
             }
+            is RegisterTransactionEvent.OnNewCategoryNameChanged -> {
+                _state.update { it.copy(newCategoryName = event.name, errorMessageResId = null) }
+            }
+            RegisterTransactionEvent.OnAddCustomCategoryClicked -> {
+                addCustomCategory()
+            }
             RegisterTransactionEvent.OnBackClicked -> {
                 viewModelScope.launch {
                     _effect.emit(RegisterTransactionEffect.NavigateBack)
@@ -53,6 +86,42 @@ class RegisterTransactionViewModel @Inject constructor(
             }
             RegisterTransactionEvent.OnSaveClicked -> {
                 saveTransaction()
+            }
+        }
+    }
+
+    private fun addCustomCategory() {
+        val name = _state.value.newCategoryName.trim()
+        if (name.isBlank()) return
+
+        _state.update { it.copy(isLoading = true, errorMessageResId = null) }
+        viewModelScope.launch {
+            try {
+                val user = authRepository.getCurrentUser().firstOrNull()
+                if (user?.role != "Editor") {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessageResId = R.string.error_permission_denied
+                        )
+                    }
+                    return@launch
+                }
+                val category = Category(
+                    id = UUID.randomUUID(),
+                    name = name,
+                    userId = user.id
+                )
+                manageCategoriesUseCase(category)
+                _state.update { it.copy(newCategoryName = "", isLoading = false) }
+            } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessageResId = R.string.error_generic
+                    )
+                }
             }
         }
     }
@@ -79,7 +148,15 @@ class RegisterTransactionViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val user = authRepository.getCurrentUser().firstOrNull()
-                val userId = user?.id ?: "unknown"
+                if (user?.role != "Editor") {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessageResId = R.string.error_permission_denied
+                        )
+                    }
+                    return@launch
+                }
 
                 val transaction = Transaction(
                     id = UUID.randomUUID(),
@@ -87,7 +164,7 @@ class RegisterTransactionViewModel @Inject constructor(
                     category = currentCategory,
                     date = currentDate,
                     description = currentDesc,
-                    userId = userId
+                    userId = user.id
                 )
 
                 addTransactionUseCase(transaction)

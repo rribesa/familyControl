@@ -180,14 +180,6 @@ private fun MetricsGrid(stats: BudgetStats) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val incomeVal = String.format(Locale.getDefault(), "%.2f", stats.totalIncome)
-        MetricCard(
-            label = stringResource(id = R.string.dashboard_total_income),
-            value = "${stats.currency} $incomeVal",
-            valueColor = Color(0xFF2E7D32),
-            modifier = Modifier.weight(1f)
-        )
-
         val expenseVal = String.format(Locale.getDefault(), "%.2f", stats.totalExpenses)
         MetricCard(
             label = stringResource(id = R.string.dashboard_total_expenses),
@@ -195,11 +187,15 @@ private fun MetricsGrid(stats: BudgetStats) {
             valueColor = MaterialTheme.colorScheme.error,
             modifier = Modifier.weight(1f)
         )
+
+        val limitVal = String.format(Locale.getDefault(), "%.2f", stats.budgetLimit)
+        MetricCard(
+            label = stringResource(id = R.string.dashboard_limit),
+            value = "${stats.currency} $limitVal",
+            valueColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.weight(1f)
+        )
     }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    BalanceCard(stats = stats)
 }
 
 @Composable
@@ -224,29 +220,6 @@ private fun MetricCard(
                 text = value,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = valueColor
-            )
-        }
-    }
-}
-
-@Composable
-private fun BalanceCard(stats: BudgetStats) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(id = R.string.dashboard_balance),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-            val balanceVal = String.format(Locale.getDefault(), "%.2f", stats.balance)
-            Text(
-                text = "${stats.currency} $balanceVal",
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }

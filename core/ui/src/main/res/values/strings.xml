@@ -96,5 +96,8 @@
     <string name="empty_state_welcome_btn_how_it_works">Ver como funciona</string>
     <string name="empty_state_welcome_tip_title">Dica de Especialista</string>
     <string name="empty_state_welcome_tip_desc">Famílias que definem orçamentos juntas economizam, em média, 20% a mais no primeiro ano.</string>
+    <string name="error_permission_denied">Permissão negada. Apenas editores podem fazer alterações.</string>
+    <string name="transactions_add_category_btn">Adicionar Categoria</string>
+    <string name="transactions_add_category_placeholder">Nova Categoria</string>
 </resources>
 

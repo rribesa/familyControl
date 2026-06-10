@@ -6,6 +6,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import br.com.rribesa.familycontrol.core.data.FirestorePaths
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -15,12 +17,41 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class AuthRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) : AuthRepository {
 
     override fun getCurrentUser(): Flow<User?> = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(auth.currentUser?.toDomainUser())
+            val firebaseUser = auth.currentUser
+            if (firebaseUser == null) {
+                trySend(null)
+            } else {
+                firestore.collection(FirestorePaths.USERS)
+                    .document(firebaseUser.uid)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        val role = document.getString("role") ?: "Editor"
+                        trySend(
+                            User(
+                                id = firebaseUser.uid,
+                                email = firebaseUser.email.orEmpty(),
+                                name = firebaseUser.displayName.orEmpty(),
+                                role = role
+                            )
+                        )
+                    }
+                    .addOnFailureListener {
+                        trySend(
+                            User(
+                                id = firebaseUser.uid,
+                                email = firebaseUser.email.orEmpty(),
+                                name = firebaseUser.displayName.orEmpty(),
+                                role = "Editor"
+                            )
+                        )
+                    }
+            }
         }
         firebaseAuth.addAuthStateListener(listener)
         awaitClose {
@@ -78,11 +109,26 @@ class AuthRepositoryImpl @Inject constructor(
                         .build()
                     firebaseUser.updateProfile(profileUpdates)
                         .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                continuation.resume(firebaseUser.toDomainUser().copy(name = name))
-                            } else {
-                                continuation.resume(firebaseUser.toDomainUser())
-                            }
+                            val userData = mapOf(
+                                "id" to firebaseUser.uid,
+                                "email" to email,
+                                "name" to name,
+                                "role" to "Editor"
+                            )
+                            firestore.collection(FirestorePaths.USERS)
+                                .document(firebaseUser.uid)
+                                .set(userData)
+                                .addOnCompleteListener {
+                                    if (task.isSuccessful) {
+                                        continuation.resume(
+                                            firebaseUser.toDomainUser().copy(name = name, role = "Editor")
+                                        )
+                                    } else {
+                                        continuation.resume(
+                                            firebaseUser.toDomainUser().copy(role = "Editor")
+                                        )
+                                    }
+                                }
                         }
                 } else {
                     continuation.resumeWithException(Exception("Firebase User is null"))
@@ -113,7 +159,8 @@ class AuthRepositoryImpl @Inject constructor(
         return User(
             id = uid,
             email = email.orEmpty(),
-            name = displayName.orEmpty()
+            name = displayName.orEmpty(),
+            role = "Editor"
         )
     }
 }

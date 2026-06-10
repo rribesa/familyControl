@@ -6,6 +6,7 @@ import br.com.rribesa.familycontrol.feature.finance.api.domain.model.BudgetStats
 import br.com.rribesa.familycontrol.feature.finance.api.domain.model.CategorySummary
 import br.com.rribesa.familycontrol.feature.finance.api.domain.repository.FinanceRepository
 import br.com.rribesa.familycontrol.feature.finance.impl.data.database.TransactionDao
+import br.com.rribesa.familycontrol.feature.finance.impl.data.database.CategoryDao
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 class FinanceRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val transactionDao: TransactionDao,
+    private val categoryDao: CategoryDao,
     private val authRepository: AuthRepository
 ) : FinanceRepository {
 
@@ -50,14 +52,9 @@ class FinanceRepositoryImpl @Inject constructor(
                     transactionDao.getTransactions(user.id),
                     getBudgetLimit()
                 ) { entities, limit ->
-                    val totalIncome = entities
-                        .filter { it.category == "Salário" }
-                        .sumOf { it.amount }
-                    val totalExpenses = entities
-                        .filter { it.category != "Salário" }
-                        .sumOf { it.amount }
+                    val totalExpenses = entities.sumOf { it.amount }
                     BudgetStats(
-                        totalIncome = totalIncome,
+                        totalIncome = 0.0,
                         totalExpenses = totalExpenses,
                         budgetLimit = limit
                     )
@@ -71,14 +68,18 @@ class FinanceRepositoryImpl @Inject constructor(
             if (user == null) {
                 flowOf(emptyList())
             } else {
-                transactionDao.getTransactions(user.id).map { entities ->
-                    val expenses = entities.filter { it.category != "Salário" }
-                    val totalExpenses = expenses.sumOf { it.amount }
-                    
-                    val categories = listOf("Alimentação", "Moradia", "Transporte", "Lazer", "Outros")
-                    
+                combine(
+                    transactionDao.getTransactions(user.id),
+                    categoryDao.getCategories(user.id)
+                ) { entities, categoryEntities ->
+                    val totalExpenses = entities.sumOf { it.amount }
+                    val categories = if (categoryEntities.isEmpty()) {
+                        listOf("Alimentação", "Moradia", "Transporte", "Lazer", "Outros")
+                    } else {
+                        categoryEntities.map { it.name }
+                    }
                     categories.map { cat ->
-                        val amount = expenses.filter { it.category == cat }.sumOf { it.amount }
+                        val amount = entities.filter { it.category == cat }.sumOf { it.amount }
                         val percentage = if (totalExpenses > 0) (amount / totalExpenses) * 100.0 else 0.0
                         CategorySummary(
                             category = cat,
